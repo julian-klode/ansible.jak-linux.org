@@ -38,6 +38,7 @@
 - name: ensure weechat is running
   service:
     name: weechat
+    state: started
     enabled: yes
   become: true
 - name: restart weechat
