@@ -53,9 +53,8 @@
 - name: add weechat relay
   shell: |
     echo '*/set relay.network.bind_address "::ffff:127.0.0.1"' >> /home/weechat/.weechat/weechat_fifo
-    echo '*/relay del weechat' >> /home/weechat/.weechat/weechat_fifo
     echo '*/relay add weechat 9000' >> /home/weechat/.weechat/weechat_fifo
-    echo '*/save' >> /home/weechat/.weechat/weechat_fifo
+    echo '*/save relay' >> /home/weechat/.weechat/weechat_fifo
   become: true
 - wait_for:
     host: "127.0.0.1"
