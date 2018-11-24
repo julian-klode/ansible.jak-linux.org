@@ -1,0 +1,12 @@
+[Unit]
+Description=Weechat IRC Client (in tmux)
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/tmux -u -2 new-session -d -s irc /usr/bin/weechat
+User=weechat
+Group=weechat
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

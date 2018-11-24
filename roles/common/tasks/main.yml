@@ -1,0 +1,6 @@
+- name: check for ssh
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    timeout: 1
+  delegate_to: localhost

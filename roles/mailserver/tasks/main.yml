@@ -1,0 +1,2 @@
+- include: postfix.yml
+- include: rspamd.yml

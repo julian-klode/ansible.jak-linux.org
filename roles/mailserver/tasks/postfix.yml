@@ -1,0 +1,21 @@
+- name: install nginx
+  apt: name=postfix state=present
+  become: true
+- service:
+    name: postfix
+    state: started
+    enabled: yes
+  become: true
+  name: ensure postfix is running
+- wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 25
+    timeout: 1
+  delegate_to: localhost
+  name: ensure smtp port is open
+- wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 587
+    timeout: 1
+  delegate_to: localhost
+  name: ensure submit port is open

@@ -1,0 +1,47 @@
+- name: install weechat, tmux, mosh
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - weechat
+    - tmux
+    - mosh
+    - apparmor-utils
+  become: true
+- name: Add weechat group
+  group:
+    name: weechat
+  become: true
+- name: Add weechat user
+  user:
+    name: weechat
+    group: weechat
+    create_home: true
+  become: true
+- name: install weechat systemd unit file
+  template: src=weechat.service.j2 dest=/etc/systemd/system/weechat.service
+  become: true
+- name: install weechat apparmor
+  template: src=usr.bin.weechat.apparmor.j2 dest=/etc/apparmor.d/usr.bin.weechat
+  become: true
+  register: weechatapparmor
+- name: enforce weechat profile
+  shell: aa-enforce "$file"
+  become: true
+  when: weechatapparmor.changed
+  register: weechatenforced
+- name: ensure weechat is running
+  service:
+    name: weechat
+    enabled: yes
+  become: true
+- name: restart weechat
+  service:
+    name: weechat
+    state: restarted
+  become: true
+  when: weechatenforced.changed
+- name: Check if weechat is running and enforced
+  shell: ps auxZ | grep weechat | grep -v grep | grep enforce
+  changed_when: false
+  register: weechat is confined
