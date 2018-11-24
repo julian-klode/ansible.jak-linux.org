@@ -8,6 +8,11 @@
     packages:
     - apparmor-utils
     - apparmor-profiles
+- name: install ufw
+  apt: name=ufw
+  become: true
+- ufw: state=enabled
+  become: true
 - name: install openssh-server
   apt: name=openssh-server state=present
   become: true
@@ -17,6 +22,8 @@
     enabled: yes
   become: true
   name: ensure openssh-server is running
+- ufw: rule=allow name=OpenSSH
+  become: true
 - name: check for ssh
   wait_for:
     host: "{{ inventory_hostname }}"

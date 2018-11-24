@@ -16,6 +16,13 @@
     name: postfix
     state: reloaded
   become: true
+
+# Open ports
+- ufw: rule=allow name=Postfix
+  become: true
+- ufw: rule=allow name="Postfix Submission"
+  become: true
+# Check availability
 - wait_for:
     host: "{{ inventory_hostname }}"
     port: 25
