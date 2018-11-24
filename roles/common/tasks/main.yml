@@ -1,3 +1,12 @@
+- name: install openssh-server
+  apt: name=openssh-server state=present
+  become: true
+- service:
+    name: ssh
+    state: started
+    enabled: yes
+  become: true
+  name: ensure openssh-server is running
 - name: check for ssh
   wait_for:
     host: "{{ inventory_hostname }}"
