@@ -19,14 +19,14 @@
     create_home: true
   become: true
 - name: install weechat systemd unit file
-  template: src=weechat.service.j2 dest=/etc/systemd/system/weechat.service
+  copy: src=etc/systemd/system/weechat.service dest=/etc/systemd/system/weechat.service
   become: true
   register: weechatservice
 - when: weechatservice.changed
   shell: systemctl daemon-reload
   become: true
 - name: install weechat apparmor
-  template: src=usr.bin.weechat.apparmor.j2 dest=/etc/apparmor.d/usr.bin.weechat
+  copy: src=etc/apparmor.d/usr.bin.weechat.apparmor dest=/etc/apparmor.d/usr.bin.weechat
   become: true
   register: weechatapparmor
 - name: enforce weechat profile
@@ -54,6 +54,7 @@
     echo '*/set relay.network.bind_address "::ffff:127.0.0.1"' >> /home/weechat/.weechat/weechat_fifo
     echo '*/relay del weechat' >> /home/weechat/.weechat/weechat_fifo
     echo '*/relay add weechat 9000' >> /home/weechat/.weechat/weechat_fifo
+    echo '*/save' >> /home/weechat/.weechat/weechat_fifo
   become: true
 - wait_for:
     host: "127.0.0.1"
