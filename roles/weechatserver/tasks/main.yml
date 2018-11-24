@@ -6,7 +6,6 @@
     - weechat
     - tmux
     - mosh
-    - apparmor-utils
   become: true
 - name: Add weechat group
   group:
