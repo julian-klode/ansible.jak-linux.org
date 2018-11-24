@@ -30,7 +30,7 @@
   become: true
   register: weechatapparmor
 - name: enforce weechat profile
-  shell: aa-enforce "$file"
+  shell: aa-complain "$file"
   become: true
   when: weechatapparmor.changed
   register: weechatenforced
@@ -46,6 +46,17 @@
   become: true
   when: weechatenforced.changed or weechatservice.changed
 - name: Check if weechat is running and enforced
-  shell: ps auxZ | grep weechat | grep -v grep | grep enforce
+  shell: ps auxZ | grep weechat | grep -v grep | grep .
   changed_when: false
   register: weechat is confined
+- name: add weechat relay
+  shell: |
+    echo '*/set relay.network.bind_address "::ffff:127.0.0.1"' >> /home/weechat/.weechat/weechat_fifo
+    echo '*/relay del weechat' >> /home/weechat/.weechat/weechat_fifo
+    echo '*/relay add weechat 9000' >> /home/weechat/.weechat/weechat_fifo
+  become: true
+- wait_for:
+    host: "127.0.0.1"
+    port: 9000
+    timeout: 1
+  name: ensure weechat port is open
