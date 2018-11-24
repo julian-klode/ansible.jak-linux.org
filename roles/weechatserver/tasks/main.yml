@@ -50,12 +50,18 @@
   shell: ps auxZ | grep weechat | grep -v grep | grep .
   changed_when: false
   register: weechat is confined
+- shell: cat /home/weechat/.weechat/relay.conf
+  register: weechat_relay_conf
+  become: true
+  changed_when: false
 - name: add weechat relay
   shell: |
     echo '*/set relay.network.bind_address "::ffff:127.0.0.1"' >> /home/weechat/.weechat/weechat_fifo
     echo '*/relay add weechat 9000' >> /home/weechat/.weechat/weechat_fifo
     echo '*/save relay' >> /home/weechat/.weechat/weechat_fifo
   become: true
+  when:
+    weechat_relay_conf.stdout.find('weechat = 9000') == -1 or weechat_relay_conf.stdout.find('bind_address = "::ffff:127.0.0.1"') == -1
 - wait_for:
     host: "127.0.0.1"
     port: 9000
