@@ -23,7 +23,8 @@
   become: true
   register: weechatservice
 - when: weechatservice.changed
-  shell: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
   become: true
 - name: install weechat apparmor
   copy: src=etc/apparmor.d/usr.bin.weechat.apparmor dest=/etc/apparmor.d/usr.bin.weechat
