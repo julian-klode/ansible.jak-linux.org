@@ -7,6 +7,15 @@
     enabled: yes
   become: true
   name: ensure postfix is running
+- name: install postfix master.cf
+  copy: src=etc/postfix/master.cf dest=/etc/postfix/master.cf
+  become: true
+  register: postfix_master_cf
+- when: postfix_master_cf.changed
+  service:
+    name: postfix
+    state: reloaded
+  become: true
 - wait_for:
     host: "{{ inventory_hostname }}"
     port: 25

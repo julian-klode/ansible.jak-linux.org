@@ -4,4 +4,5 @@
   become: true
   roles:
     - {role: ../roles/common}
+    - {role: ../roles/mailserver}
     - {role: ../roles/weechatserver}
