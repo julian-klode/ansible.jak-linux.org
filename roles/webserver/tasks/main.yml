@@ -1,5 +1,12 @@
 - name: install nginx
   apt: name=nginx state=present
+
+- name: install apparmor profile
+  copy: src=etc/apparmor.d/usr.sbin.nginx dest=/etc/apparmor.d/usr.sbin.nginx
+  notify:
+    - aa-enforce nginx
+    - systemctl restart nginx
+
 - service:
     name: nginx
     state: started

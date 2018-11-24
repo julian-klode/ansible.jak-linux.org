@@ -1,0 +1,6 @@
+- name: aa-enforce nginx
+  shell: aa-enforce usr.sbin.nginx
+  when: ansible_apparmor["status"] == "enabled"
+
+- name: systemctl restart nginx
+  service: name=nginx state=restarted

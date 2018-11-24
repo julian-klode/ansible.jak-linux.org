@@ -1,0 +1,36 @@
+# Last Modified: Fri Nov 23 20:09:52 2018
+#include <tunables/global>
+
+/usr/sbin/nginx {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/openssl>
+
+  # Capabilities
+  capability dac_override,
+  capability dac_read_search,
+  capability net_bind_service,
+  capability setgid,
+  capability setuid,
+
+  # The binary itself
+  /usr/sbin/nginx mr,
+
+  # State and log files
+  /var/log/nginx/*.log rw,
+  /var/lib/nginx/** rw,
+  /run/nginx.pid rw,
+
+  # Configuration files
+  /var/www/** r,
+  /etc/nginx/** r,
+  /etc/letsencrypt/** r,
+
+  # Modules and other read-only data
+  /usr/lib/nginx/** rm,
+  /usr/share/nginx/** r,
+
+  # Networking
+  network inet stream,
+  network inet6 stream,
+}
