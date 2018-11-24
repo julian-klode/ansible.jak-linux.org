@@ -1,3 +1,13 @@
+- name: install haveged
+  apt: name=haveged state=present
+  become: true
+- name: install apparmor
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - apparmor-utils
+    - apparmor-profiles
 - name: install openssh-server
   apt: name=openssh-server state=present
   become: true
