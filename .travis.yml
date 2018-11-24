@@ -6,6 +6,8 @@ services:
 env:
   - distribution: ubuntu
     version: bionic
+  - distribution: debian
+    version: buster
 
 before_install:
   - sudo docker pull ${distribution}:${version}

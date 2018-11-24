@@ -1,0 +1,8 @@
+FROM debian:buster
+
+RUN apt-get update && \
+	apt-get dist-upgrade -y && \
+	apt-get install -y systemd ansible && \
+	echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+
+ENTRYPOINT ["/bin/systemd"]
