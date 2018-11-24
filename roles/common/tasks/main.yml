@@ -23,3 +23,6 @@
     port: 22
     timeout: 1
   delegate_to: localhost
+- name: make sure apt pipelining is enabled
+  file: name=/etc/apt/apt.conf.d/90cloud-init-pipelining state=absent
+  become: true
