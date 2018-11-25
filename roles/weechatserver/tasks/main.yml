@@ -70,3 +70,8 @@
     port: 9000
     timeout: 1
   name: ensure weechat port is open
+
+- name: Ensure weechat relay port is not open to public
+  wait_for: host="{{ inventory_hostname }}" port=9000 timeout=1 state=stopped
+  delegate_to: localhost
+  when: inventory_hostname != "localhost"
