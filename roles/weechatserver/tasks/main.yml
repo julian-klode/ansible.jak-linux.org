@@ -7,44 +7,45 @@
     - weechat-plugins
     - tmux
     - mosh
+
+
+# Discretionary access control
 - name: Add weechat group
-  group:
-    name: weechat
+  group: name=weechat
 - name: Add weechat user
-  user:
-    name: weechat
-    group: weechat
-    create_home: true
-- name: install weechat systemd unit file
-  copy: src=etc/systemd/system/weechat.service dest=/etc/systemd/system/weechat.service
-  register: weechatservice
-- when: weechatservice.changed
-  systemd:
-    daemon_reload: yes
+  user: name=weechat group=weechat create_home=true
+
+# Mandatory access control
 - name: install weechat apparmor
   copy: src=etc/apparmor.d/usr.bin.weechat.apparmor dest=/etc/apparmor.d/usr.bin.weechat
-  register: weechatapparmor
-- name: enforce weechat profile
-  shell: aa-complain "$file"
-  when: weechatapparmor.changed
-  register: weechatenforced
+  notify:
+    - aa-enforce weechat
+    - systemctl restart weechat
+
+# Configure service
+- name: install weechat systemd unit file
+  copy: src=etc/systemd/system/weechat.service dest=/etc/systemd/system/weechat.service
+  notify:
+    - systemctl daemon-reload
+    - systemctl restart weechat
+
 - name: ensure weechat is running
-  service:
-    name: weechat
-    state: started
-    enabled: yes
-- name: restart weechat
-  service:
-    name: weechat
-    state: restarted
-  when: weechatenforced.changed or weechatservice.changed
+  service: name=weechat state=started enabled=true
+
 - name: Check if weechat is running and enforced
   shell: ps auxZ | grep weechat | grep -v grep | grep .
   changed_when: false
-  register: weechat is confined
+
+# Wait for weechat to generate relay conf and fifo so we can configure relay
+- name: Check that relay.conf exists
+  wait_for: path=/home/weechat/.weechat/relay.conf timeout=1
+- name: Check that control fifo exists
+  wait_for: path=/home/weechat/.weechat/weechat_fifo timeout=1
+
 - shell: cat /home/weechat/.weechat/relay.conf
   register: weechat_relay_conf
   changed_when: false
+
 - name: add weechat relay
   shell: |
     echo '*/set relay.network.bind_address "::ffff:127.0.0.1"' >> /home/weechat/.weechat/weechat_fifo
@@ -57,11 +58,8 @@
 - name: ufw limit mosh
   ufw: rule=limit name=mosh
 
-- wait_for:
-    host: "127.0.0.1"
-    port: 9000
-    timeout: 1
-  name: ensure weechat port is open
+- name: ensure weechat port is open
+  wait_for: host=127.0.0.1 port=9000 timeout=1
 
 - name: Ensure weechat relay port is not open to public
   wait_for: host="{{ inventory_hostname }}" port=9000 timeout=1 state=stopped

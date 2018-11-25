@@ -1,0 +1,9 @@
+- name: systemctl daemon-reload
+  systemd: daemon_reload=yes
+
+- name: systemctl restart weechat
+  service: name=weechat state=restarted
+
+- name: aa-enforce weechat
+  shell: aa-enforce weechat
+  when: ansible_apparmor["status"] == "enabled"
