@@ -24,6 +24,10 @@
   name: ensure openssh-server is running
 - ufw: rule=limit name=OpenSSH
   become: true
+- name: Disable password login
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^(#\s*)?PasswordAuthentication " line="PasswordAuthentication no"
+  become: true
+  notify: restart ssh
 - name: check for ssh
   wait_for:
     host: "{{ inventory_hostname }}"
