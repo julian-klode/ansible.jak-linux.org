@@ -22,7 +22,7 @@
     enabled: yes
   become: true
   name: ensure openssh-server is running
-- ufw: rule=allow name=OpenSSH
+- ufw: rule=limit name=OpenSSH
   become: true
 - name: check for ssh
   wait_for:

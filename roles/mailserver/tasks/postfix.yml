@@ -20,7 +20,7 @@
 # Open ports
 - ufw: rule=allow name=Postfix
   become: true
-- ufw: rule=allow name="Postfix Submission"
+- ufw: rule=limit name="Postfix Submission"
   become: true
 # Check availability
 - wait_for:
