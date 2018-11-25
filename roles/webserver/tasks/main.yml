@@ -43,6 +43,12 @@
   file: name=/var/www/{{item.cname}} state=directory
   loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
 
+# Enable custom configuration rules
+- name: Make registered sites available
+  copy: content="{{item.value}}" dest=/etc/nginx/conf.d/{{item.key}}.conf
+  with_dict: "{{ nginx_conf | default({}) }}"
+  notify: systemctl reload nginx
+
 # Enable port in firewall
 - ufw: rule=allow name="Nginx Full"
 
