@@ -45,7 +45,11 @@
 
 # Enable custom configuration rules
 - name: Make registered sites available
-  copy: content="{{item.value}}" dest=/etc/nginx/conf.d/{{item.key}}.conf
+  copy:
+    content: |
+      # Ansible managed
+      {{item.value}}
+    dest: /etc/nginx/conf.d/{{item.key}}.conf
   with_dict: "{{ nginx_conf | default({}) }}"
   notify: systemctl reload nginx
 

@@ -1,4 +1,4 @@
-# Last Modified: Fri Nov 23 20:09:52 2018
+# Ansible managed
 #include <tunables/global>
 
 /usr/sbin/nginx {

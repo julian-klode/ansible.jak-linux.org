@@ -1,3 +1,4 @@
+# Ansible managed
 [Unit]
 Description=Weechat IRC Client (in tmux)
 
