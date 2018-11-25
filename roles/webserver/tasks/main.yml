@@ -1,13 +1,10 @@
 - name: install nginx
   apt: name=nginx state=present
-  become: true
 - service:
     name: nginx
     state: started
     enabled: yes
-  become: true
 - ufw: rule=allow name="Nginx Full"
-  become: true
 - wait_for:
     host: "{{ inventory_hostname }}"
     port: 443

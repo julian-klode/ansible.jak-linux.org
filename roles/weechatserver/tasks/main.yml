@@ -7,32 +7,25 @@
     - weechat-plugins
     - tmux
     - mosh
-  become: true
 - name: Add weechat group
   group:
     name: weechat
-  become: true
 - name: Add weechat user
   user:
     name: weechat
     group: weechat
     create_home: true
-  become: true
 - name: install weechat systemd unit file
   copy: src=etc/systemd/system/weechat.service dest=/etc/systemd/system/weechat.service
-  become: true
   register: weechatservice
 - when: weechatservice.changed
   systemd:
     daemon_reload: yes
-  become: true
 - name: install weechat apparmor
   copy: src=etc/apparmor.d/usr.bin.weechat.apparmor dest=/etc/apparmor.d/usr.bin.weechat
-  become: true
   register: weechatapparmor
 - name: enforce weechat profile
   shell: aa-complain "$file"
-  become: true
   when: weechatapparmor.changed
   register: weechatenforced
 - name: ensure weechat is running
@@ -40,12 +33,10 @@
     name: weechat
     state: started
     enabled: yes
-  become: true
 - name: restart weechat
   service:
     name: weechat
     state: restarted
-  become: true
   when: weechatenforced.changed or weechatservice.changed
 - name: Check if weechat is running and enforced
   shell: ps auxZ | grep weechat | grep -v grep | grep .
@@ -53,18 +44,15 @@
   register: weechat is confined
 - shell: cat /home/weechat/.weechat/relay.conf
   register: weechat_relay_conf
-  become: true
   changed_when: false
 - name: add weechat relay
   shell: |
     echo '*/set relay.network.bind_address "::ffff:127.0.0.1"' >> /home/weechat/.weechat/weechat_fifo
     echo '*/relay add weechat 9000' >> /home/weechat/.weechat/weechat_fifo
     echo '*/save relay' >> /home/weechat/.weechat/weechat_fifo
-  become: true
   when:
     weechat_relay_conf.stdout.find('weechat = 9000') == -1 or weechat_relay_conf.stdout.find('bind_address = "::ffff:127.0.0.1"') == -1
 - ufw: rule=allow name=mosh
-  become: true
 - wait_for:
     host: "127.0.0.1"
     port: 9000

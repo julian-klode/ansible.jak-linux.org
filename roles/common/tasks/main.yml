@@ -1,6 +1,5 @@
 - name: install haveged
   apt: name=haveged state=present
-  become: true
 - name: install apparmor
   apt:
     name: "{{ packages }}"
@@ -10,23 +9,17 @@
     - apparmor-profiles
 - name: install ufw
   apt: name=ufw
-  become: true
 - ufw: state=enabled
-  become: true
 - name: install openssh-server
   apt: name=openssh-server state=present
-  become: true
 - service:
     name: ssh
     state: started
     enabled: yes
-  become: true
   name: ensure openssh-server is running
 - ufw: rule=limit name=OpenSSH
-  become: true
 - name: Disable password login
   lineinfile: dest=/etc/ssh/sshd_config regexp="^(#\s*)?PasswordAuthentication " line="PasswordAuthentication no"
-  become: true
   notify: restart ssh
 - name: check for ssh
   wait_for:
@@ -36,4 +29,3 @@
   delegate_to: localhost
 - name: make sure apt pipelining is enabled
   file: name=/etc/apt/apt.conf.d/90cloud-init-pipelining state=absent
-  become: true
