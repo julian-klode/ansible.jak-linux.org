@@ -52,7 +52,11 @@
     echo '*/save relay' >> /home/weechat/.weechat/weechat_fifo
   when:
     weechat_relay_conf.stdout.find('weechat = 9000') == -1 or weechat_relay_conf.stdout.find('bind_address = "::ffff:127.0.0.1"') == -1
-- ufw: rule=allow name=mosh
+
+# Configure firewall and check that ports work
+- name: ufw limit mosh
+  ufw: rule=limit name=mosh
+
 - wait_for:
     host: "127.0.0.1"
     port: 9000
