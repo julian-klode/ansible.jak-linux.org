@@ -7,11 +7,6 @@
 - ufw: rule=allow name="Nginx Full"
 - wait_for:
     host: "{{ inventory_hostname }}"
-    port: 443
-    timeout: 1
-  delegate_to: localhost
-- wait_for:
-    host: "{{ inventory_hostname }}"
     port: 80
     timeout: 1
   delegate_to: localhost
