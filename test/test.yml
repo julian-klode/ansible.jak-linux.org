@@ -1,8 +1,13 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    domains:
+      - cname: localhost
+        alias: []
   roles:
     - {role: ../roles/common}
+    - {role: ../roles/snake-oil-letsencrypt}
     - {role: ../roles/mailserver}
     - {role: ../roles/webserver}
     - {role: ../roles/weechatserver}

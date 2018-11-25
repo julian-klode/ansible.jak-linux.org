@@ -1,0 +1,19 @@
+- apt: name=openssl state=present
+- apt: name=ssl-cert state=present
+
+- name: create certificates
+  shell: |
+   set -e
+   mkdir -p /etc/letsencrypt/live/{{item.cname}}
+   openssl req -x509 -nodes -newkey rsa:2048 -days 365 -sha256 \
+      -keyout /etc/letsencrypt/live/{{item.cname}}/privkey.pem \
+      -out /etc/letsencrypt/live/{{item.cname}}/fullchain.pem \
+      -days 365 -subj '/CN={{item.cname}}' \
+      -reqexts SAN  -extensions SAN \
+      -config   <(cat /etc/ssl/openssl.cnf; printf "\n[SAN]\nsubjectAltName=DNS:{{item.cname}}{% for alias in item.alias %},DNS:{{ alias }}{% endfor %}")
+   cp /etc/letsencrypt/live/{{item.cname}}/fullchain.pem /etc/letsencrypt/live/{{item.cname}}/chain.pem
+  args:
+    executable: /bin/bash
+    warn: false
+    creates: /etc/letsencrypt/live/{{item.cname}}/chain.pem
+  loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
