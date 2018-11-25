@@ -1,0 +1,5 @@
+- name: setup certificates for the sites
+  shell: letsencrypt certonly --webroot --webroot-path /var/www/letsencrypt --agree-tos -m {{ letsencrypt_email }} -d {{ item.cname }} {% for alias in item.alias %}-d {{ alias }}{% endfor %}
+  args:
+    creates: /etc/letsencrypt/live/{{item.cname}}/chain.pem
+  loop: "{{ domains }}"
