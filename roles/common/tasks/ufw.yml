@@ -1,0 +1,6 @@
+# Configure firewall
+- name: install ufw
+  apt: name=ufw
+
+- name: ensure ufw is enabled
+  ufw: state=enabled

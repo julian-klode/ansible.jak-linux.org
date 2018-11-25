@@ -1,5 +1,11 @@
+# Configure apt
+- name: make sure apt pipelining is enabled
+  file: name=/etc/apt/apt.conf.d/90cloud-init-pipelining state=absent
+
+# Install packages
 - name: install haveged
   apt: name=haveged state=present
+
 - name: install apparmor
   apt:
     name: "{{ packages }}"
@@ -7,25 +13,6 @@
     packages:
     - apparmor-utils
     - apparmor-profiles
-- name: install ufw
-  apt: name=ufw
-- ufw: state=enabled
-- name: install openssh-server
-  apt: name=openssh-server state=present
-- service:
-    name: ssh
-    state: started
-    enabled: yes
-  name: ensure openssh-server is running
-- ufw: rule=limit name=OpenSSH
-- name: Disable password login
-  lineinfile: dest=/etc/ssh/sshd_config regexp="^(#\s*)?PasswordAuthentication " line="PasswordAuthentication no"
-  notify: restart ssh
-- name: check for ssh
-  wait_for:
-    host: "{{ inventory_hostname }}"
-    port: 22
-    timeout: 1
-  delegate_to: localhost
-- name: make sure apt pipelining is enabled
-  file: name=/etc/apt/apt.conf.d/90cloud-init-pipelining state=absent
+
+- include: ufw.yml
+- include: ssh.yml
