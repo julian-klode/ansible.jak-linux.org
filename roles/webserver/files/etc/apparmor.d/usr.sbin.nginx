@@ -19,6 +19,7 @@
   # State and log files
   /var/log/nginx/*.log rw,
   /var/lib/nginx/** rw,
+  /var/cache/nginx/** rw,
   /run/nginx.pid rw,
 
   # Configuration files
