@@ -4,3 +4,6 @@
 
 - name: systemctl restart nginx
   service: name=nginx state=restarted
+
+- name: systemctl reload nginx
+  service: name=nginx state=reloaded

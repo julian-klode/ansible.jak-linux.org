@@ -1,0 +1,15 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    # Respond to letencrypt challenge
+    location ^~ /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        root /var/www/letsencrypt;
+    }
+
+    # Redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}

@@ -1,19 +1,59 @@
 - name: install nginx
   apt: name=nginx state=present
 
+# Setup apparmor
 - name: install apparmor profile
   copy: src=etc/apparmor.d/usr.sbin.nginx dest=/etc/apparmor.d/usr.sbin.nginx
   notify:
     - aa-enforce nginx
     - systemctl restart nginx
 
-- service:
-    name: nginx
-    state: started
-    enabled: yes
+# Remove the default configuration
+- name: Remove default nginx config
+  file: name=/etc/nginx/sites-enabled/default state=absent
+  become: true
+  notify: systemctl reload nginx
+
+# Setup letsencrypt / http redirects
+- name: install http site
+  copy: src=etc/nginx/sites-available/http dest=/etc/nginx/sites-available/http
+  become: true
+  notify: systemctl reload nginx
+
+- name: enable http site
+  file: src=../sites-available/http path=/etc/nginx/sites-enabled/http state=link
+  notify: systemctl reload nginx
+
+- name: create letsencrypt directory
+  file: name=/var/www/letsencrypt state=directory
+  become: true
+
+# Register other sites
+- name: Make registered sites available
+  template: src=site.j2 dest=/etc/nginx/sites-available/{{item.cname}}
+  loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
+  notify: systemctl reload nginx
+
+- name: enable registered sites
+  file: src=../sites-available/{{item.cname}} dest=/etc/nginx/sites-enabled/{{item.cname}} state=link
+  loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
+  notify: systemctl reload nginx
+
+- name: create site directories
+  file: name=/var/www/{{item.cname}} state=directory
+  loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
+
+# Enable port in firewall
 - ufw: rule=allow name="Nginx Full"
-- wait_for:
-    host: "{{ inventory_hostname }}"
-    port: 80
-    timeout: 1
+
+# Final service availability tests
+- name: Ensure nginx is started and enabled
+  service: name=nginx state=started enabled=true
+
+- name: Ensure nginx is listening on port 80
+  wait_for: host="{{ inventory_hostname }}" port=80 timeout=1
+  delegate_to: localhost
+
+- name: Ensure nginx is listening on port 443
+  wait_for: host="{{ inventory_hostname }}" port=443 timeout=1
   delegate_to: localhost
