@@ -41,9 +41,7 @@ server {
         try_files $uri $uri/ =404;
     }
 
-  {% if locations_add is defined %}
-    {{ locations_add [item.cname] | default("") }}
-  {% endif %}
+    {{ item.nginx_add_locations | default("") }}
  {% else %}
     return 301 https://{{item.cname}}$request_uri;
  {% endif %}
