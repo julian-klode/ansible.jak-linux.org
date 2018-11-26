@@ -63,7 +63,9 @@
 - name: Ensure nginx is listening on port 80
   wait_for: host="{{ inventory_hostname }}" port=80 timeout=1
   delegate_to: localhost
+  tags: assert
 
 - name: Ensure nginx is listening on port 443
   wait_for: host="{{ inventory_hostname }}" port=443 timeout=1
   delegate_to: localhost
+  tags: assert

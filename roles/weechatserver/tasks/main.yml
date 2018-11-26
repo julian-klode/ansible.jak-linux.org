@@ -60,8 +60,10 @@
 
 - name: ensure weechat port is open
   wait_for: host=127.0.0.1 port=9000 timeout=1
+  tags: assert
 
 - name: Ensure weechat relay port is not open to public
   wait_for: host="{{ inventory_hostname }}" port=9000 timeout=1 state=stopped
   delegate_to: localhost
   when: inventory_hostname != "localhost"
+  tags: assert

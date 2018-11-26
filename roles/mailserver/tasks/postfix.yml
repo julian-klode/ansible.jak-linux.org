@@ -23,9 +23,11 @@
     timeout: 1
   delegate_to: localhost
   name: ensure smtp port is open
+  tags: assert
 - wait_for:
     host: "{{ inventory_hostname }}"
     port: 587
     timeout: 1
   delegate_to: localhost
   name: ensure submit port is open
+  tags: assert
