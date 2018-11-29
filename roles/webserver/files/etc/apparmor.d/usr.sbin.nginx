@@ -34,4 +34,8 @@
   # Networking
   network inet stream,
   network inet6 stream,
+
+  # Include additional override files. Let's have a directory, so we
+  # can have overrides for plugins and stuff.
+  #include <local/usr.sbin.nginx.d>
 }

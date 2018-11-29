@@ -2,6 +2,9 @@
   apt: name=nginx state=present
 
 # Setup apparmor
+- name: create apparmor override directory
+  file: name=/etc/apparmor.d/local/usr.sbin.nginx.d state=directory
+
 - name: install apparmor profile
   copy: src=etc/apparmor.d/usr.sbin.nginx dest=/etc/apparmor.d/usr.sbin.nginx
   notify:
@@ -42,6 +45,19 @@
 - name: create site directories
   file: name=/var/www/{{item.cname}} state=directory
   loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
+
+# Enable custom configuration rules
+- name: Make registered sites available
+  copy:
+    content: |
+      # Ansible managed
+      {{item.nginx_apparmor | default('') }}
+    dest: /etc/apparmor.d/local/usr.sbin.nginx.d/{{item.cname}}
+  loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
+  notify:
+    - aa-enforce nginx
+    - systemctl restart nginx
+
 
 # Enable custom configuration rules
 - name: Make registered sites available
