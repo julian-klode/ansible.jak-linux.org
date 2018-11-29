@@ -12,6 +12,7 @@
   capability net_bind_service,
   capability setgid,
   capability setuid,
+  capability chown,
 
   # The binary itself
   /usr/sbin/nginx mr,
