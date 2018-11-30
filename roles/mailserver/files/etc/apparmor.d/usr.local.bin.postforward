@@ -1,0 +1,19 @@
+# Managed by Ansible
+
+#include <tunables/global>
+
+/usr/local/bin/postforward {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/postfix-common>
+
+  /lib/x86_64-linux-gnu/ld-*.so mr,
+  /proc/sys/kernel/hostname r,
+  /proc/sys/net/core/somaxconn r,
+  /usr/local/bin/postforward mr,
+  /usr/sbin/postconf mrix,
+  /usr/sbin/postdrop mrix,
+  /usr/sbin/sendmail mrix,
+  /var/spool/postfix/public/pickup rw,
+  owner /var/spool/postfix/maildrop/* rw,
+}

@@ -1,12 +1,27 @@
 ---
 
-- name: install postfix
+- name: install postfix and postsrsd
   apt:
     name: "{{ packages }}"
   vars:
     packages:
     - postfix
+    - postsrsd
     state: present
+
+- name: install postsrsd apparmor profile
+  copy: src=etc/apparmor.d/usr.sbin.postsrsd dest=/etc/apparmor.d/usr.sbin.postsrsd
+  register: postsrsd_apparmor
+
+- name: enforce postsrsd
+  command: aa-enforce usr.sbin.postsrsd
+  when: postsrsd_apparmor.changed and ansible_apparmor["status"] == "enabled"
+
+- name: esure postsrsd is running
+  service:
+    name: postsrsd
+    state: started
+    enabled: yes
 
 - name: esure postfix is running
   service:
@@ -55,3 +70,17 @@
     timeout: 1
   delegate_to: localhost
   tags: assert
+
+# Install postward
+- name: build postforward
+  command: go get -v github.com/zoni/postforward
+  args:
+    creates: "{{ lookup('env', 'GOPATH') | default('~/go') }}/bin/postforward"
+  delegate_to: localhost
+
+- name: install postforward
+  copy: src={{ lookup('env','GOPATH') | default('~/go') }}/bin/postforward dest=/usr/local/bin/postforward
+
+- name: install postforward apparmor profile
+  copy: src=etc/apparmor.d/usr.local.bin.postforward dest=/etc/apparmor.d/usr.local.bin.postforward
+  notify: aa-enforce usr.local.bin.postforward
