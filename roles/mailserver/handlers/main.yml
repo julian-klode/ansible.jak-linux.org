@@ -1,6 +1,10 @@
 - name: newaliases
   command: newaliases
 
+- name: aa-enforce usr.local.bin.postforward
+  command: aa-enforce usr.local.bin.postforward
+  when: ansible_apparmor["status"] == "enabled"
+
 - name: aa-enforce rspamd
   command: aa-enforce usr.bin.rspamd
   when: ansible_apparmor["status"] == "enabled"

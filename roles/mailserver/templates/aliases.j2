@@ -10,5 +10,11 @@ hostmaster:      root
 webmaster:       root
 www:             webmaster
 
+#
 # Custom aliases
-{{ aliases | default('') }}
+{% for key, value in forwards.iteritems()  %}
+{{key}}: "|/usr/local/bin/postforward --path /usr/sbin:/sbin:/usr/bin:/bin {{value}}"
+{% endfor %}
+
+# Custom aliases
+{{ aliases }}
