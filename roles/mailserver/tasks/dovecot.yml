@@ -1,0 +1,39 @@
+---
+
+- name: install dovecot
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - dovecot-imapd
+    - dovecot-sieve
+    - dovecot-lmtpd
+    state: present
+
+- name: esure dovecot is running
+  service:
+    name: dovecot
+    state: started
+    enabled: yes
+
+- name: install dovecot-sieve-filters directory
+  file:
+    dest: /usr/local/lib/dovecot-sieve-filters
+    state: directory
+
+- name: install dovecot.conf
+  template: src=dovecot.conf.j2 dest=/etc/dovecot/dovecot.conf
+  notify: reload dovecot
+
+- name: ufw allow Dovecot Secure IMAP
+  ufw:
+    rule: limit
+    name: Dovecot Secure IMAP
+
+- name: ensure smtp port is open
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 993
+    timeout: 1
+  delegate_to: localhost
+  tags: assert
