@@ -1,1 +1,37 @@
+---
 
+- name: Add rspamd apt key
+  apt_key:
+    url: https://rspamd.com/apt-stable/gpg.key
+    keyring: /etc/apt/trusted.gpg.d/rspamd.gpg
+    id: 3FA347D5E599BE4595CA2576FFA232EDBF21E25E
+
+- name: Add rspamd repository
+  apt_repository:
+    repo: deb [arch=amd64] http://rspamd.com/apt-stable/ {{ansible_distribution_release | default(ansible_lsb.release) }} main
+    state: present
+    filename: rspamd
+    update_cache: true
+
+- name: install rspamd apparmor profile
+  copy:
+    src: etc/apparmor.d/usr.bin.rspamd
+    dest: /etc/apparmor.d/usr.bin.rspamd
+  notify:
+    - aa-enforce rspamd
+    - restart rspamd
+  
+- name: install rspamd and redis
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - rspamd
+    - redis
+
+- name: Ensure that rspamd is running
+  service:
+    name: rspamd
+    state: started
+    enabled: yes

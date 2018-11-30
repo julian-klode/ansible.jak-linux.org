@@ -1,0 +1,32 @@
+# Ansible managed
+
+#include <tunables/global>
+
+/usr/bin/rspamd {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/ssl_certs>
+
+  # configuration
+  /etc/rspamd/** r,
+
+  # magic!
+  /etc/magic r,
+
+  #  kernel stuff
+  /dev/shm/rhm.* rw,
+  /proc/sys/kernel/random/uuid r,
+
+  # something execution
+  /lib/*/ld-*.so mr,
+  /usr/bin/rspamd mr,
+
+  # Variable data
+  /var/lib/rspamd/ r,
+  /var/lib/rspamd/** rwk,
+  /{var/,}run/rspamd/* rwk,
+  /var/log/rspamd/rspamd.log* rwk,
+
+  # Lua scripts web interface and stuff
+  /usr/share/rspamd/** r,
+}
