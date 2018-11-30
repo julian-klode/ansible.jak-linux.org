@@ -1,0 +1,73 @@
+# Managed by ansible
+
+# Ensure local email can be delivered - map user@host to user
+auth_username_format = %Ln
+
+# Deliver to Maildir
+mail_location = maildir:~/Maildir:LAYOUT=fs
+
+mail_privileged_group = mail
+
+# Configuration of directories
+namespace inbox {
+  inbox = yes
+  location = 
+  mailbox Drafts {
+    special_use = \Drafts
+  }
+  mailbox Junk {
+    special_use = \Junk
+  }
+  mailbox Sent {
+    special_use = \Sent
+  }
+  mailbox "Sent Messages" {
+    special_use = \Sent
+  }
+  mailbox Trash {
+    special_use = \Trash
+  }
+  prefix = 
+}
+
+# Use PAM for authentication
+passdb {
+  driver = pam
+}
+
+userdb {
+  driver = passwd
+}
+
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    group = postfix
+    mode = 0666
+    user = postfix
+  }
+  unix_listener auth-userdb {
+  }
+}
+
+
+# Load plugins
+plugin {
+  sieve = file:~/sieve;active=~/.dovecot.sieve
+}
+
+# Setup protocols
+protocols = "imap lmtp"
+
+service lmtp {
+  unix_listener /var/spool/postfix/private/dovecot-lmtp {
+    group = postfix
+    mode = 0600
+    user = postfix
+  }
+}
+
+# Setup IMAP encryption
+ssl_cert = </etc/letsencrypt/live/{{ domains[0].cname }}/fullchain.pem
+ssl_client_ca_dir = /etc/ssl/certs
+ssl_key = </etc/letsencrypt/live/{{ domains[0].cname }}/privkey.pem
+ssl_protocols = !SSLv3 !TLSv1.1
