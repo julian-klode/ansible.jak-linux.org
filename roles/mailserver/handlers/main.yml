@@ -5,6 +5,7 @@
   command: aa-enforce usr.local.bin.postforward
   when: ansible_apparmor["status"] == "enabled"
 
+
 - name: aa-enforce rspamd
   command: aa-enforce usr.bin.rspamd
   when: ansible_apparmor["status"] == "enabled"
@@ -13,3 +14,8 @@
   service:
     name: rspamd
     state: restarted
+
+- name: reload dovecot
+  service:
+    name: dovecot
+    state: reloaded

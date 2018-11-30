@@ -2,4 +2,5 @@
   copy: content="{{ domains[0].cname }}" dest=/etc/mailname
 
 - include: rspamd.yml
+- include: dovecot.yml
 - include: postfix.yml
