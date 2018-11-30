@@ -5,10 +5,16 @@
     state: started
     enabled: yes
   name: ensure postfix is running
+
 - name: install postfix master.cf
   copy: src=etc/postfix/master.cf dest=/etc/postfix/master.cf
   register: postfix_master_cf
-- when: postfix_master_cf.changed
+
+- name: install postfix main.cf
+  template: src=main.cf.j2 dest=/etc/postfix/main.cf
+  register: postfix_main_cf
+
+- when: postfix_master_cf.changed or postfix_main_cf.changed
   service:
     name: postfix
     state: reloaded
