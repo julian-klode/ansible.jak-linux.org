@@ -16,4 +16,5 @@
      - common
      - mastodon-comments
      - weechatserver
+     - webalizer
      - webserver

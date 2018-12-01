@@ -1,0 +1,29 @@
+---
+
+- name: install webalizer
+  apt:
+    name: webalizer
+
+- name: Enable incremental
+  lineinfile:
+    path: /etc/webalizer/webalizer.conf
+    regexp: '^#Incremental'
+    line: 'Incremental    yes'
+
+- name: Set log file
+  lineinfile:
+    path: /etc/webalizer/webalizer.conf
+    regexp: '^LogFile'
+    line: 'LogFile /var/log/nginx/access.log.1'
+
+- name: create output directory
+  file:
+    name: '/var/www/{{ domains[0].cname }}/webalizer'
+    state: directory
+
+- name: Set OutPutDir file
+  lineinfile:
+    path: /etc/webalizer/webalizer.conf
+    regexp: '^OutputDir'
+    line: 'OutputDir /var/www/{{ domains[0].cname }}/webalizer'
+
