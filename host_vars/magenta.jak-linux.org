@@ -20,5 +20,18 @@ domains:
           proxy_set_header X-Real-IP $remote_addr;  # Let WeeChat see the client's IP
           limit_req zone=weechat burst=1 nodelay;   # Brute force prevention
       }
+
   - cname: jak-linux.org
     alias: [www.jak-linux.org]
+
+  - cname: blog.jak-linux.org
+    alias: []
+    nginx_add_locations: |
+      location ~ /mastodon/getcomments.php {
+        fastcgi_pass    unix:/run/mastodon-comments.sock;
+        include         fastcgi_params;
+        fastcgi_cache GO;
+        fastcgi_cache_valid 200 10m;
+      }
+    nginx_apparmor: |
+      /run/mastodon-comments.sock rw,
