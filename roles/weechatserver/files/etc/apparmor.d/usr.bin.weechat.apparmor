@@ -15,6 +15,7 @@
   # State and log files
   # Plugins and scripts
   /usr/lib/weechat/plugins/** rm,
+  /usr/lib/*/weechat/plugins/** rm,
   /usr/share/weechat/** r,
 
   # Networking
