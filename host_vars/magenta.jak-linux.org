@@ -20,3 +20,5 @@ domains:
           proxy_set_header X-Real-IP $remote_addr;  # Let WeeChat see the client's IP
           limit_req zone=weechat burst=1 nodelay;   # Brute force prevention
       }
+  - cname: jak-linux.org
+    alias: [www.jak-linux.org]
