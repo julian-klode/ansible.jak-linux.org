@@ -14,5 +14,6 @@
      - all
   roles:
      - common
+     - mastodon-comments
      - weechatserver
      - webserver
