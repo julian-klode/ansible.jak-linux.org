@@ -1,5 +1,6 @@
 - name: install nginx
   apt: name=nginx state=present
+  register: new_install
 
 # Setup apparmor
 - name: create apparmor override directory
@@ -71,6 +72,10 @@
 
 # Enable port in firewall
 - ufw: rule=allow name="Nginx Full"
+
+- name: Force reload nginx
+  service: name=nginx state=reloaded
+  when: new_install.changed
 
 # Final service availability tests
 - name: Ensure nginx is started and enabled
