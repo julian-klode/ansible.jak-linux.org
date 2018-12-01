@@ -42,6 +42,10 @@ server {
         try_files $uri $uri/ =404;
     }
 
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|woff2|otf)$ {
+        expires 365d;
+    }
+
     {{ item.nginx_add_locations | default("") }}
  {% else %}
     return 301 https://{{item.cname}}$request_uri;
