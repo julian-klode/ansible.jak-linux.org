@@ -18,6 +18,10 @@
   become: true
   notify: systemctl reload nginx
 
+- name: install new nginx.conf
+  copy: src=etc/nginx/nginx.conf dest=/etc/nginx/nginx.conf
+  notify: systemctl reload nginx
+
 # Setup letsencrypt / http redirects
 - name: install http site
   copy: src=etc/nginx/sites-available/http dest=/etc/nginx/sites-available/http
