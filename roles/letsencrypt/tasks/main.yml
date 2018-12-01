@@ -1,9 +1,22 @@
 - name: install letsencrypt client
   apt:
-    name: letsencrypt
+    name: "{{packages}}"
+  vars:
+    packages:
+      - nginx
+      - certbot
+  register: certbot_installed
+
+- name: configure temporary letsencrypt webroot
+  command: ln -s html /var/www/letsencrypt
+  when: certbot_installed.changed
 
 - name: setup certificates for the sites
   shell: letsencrypt certonly --webroot --webroot-path /var/www/letsencrypt --agree-tos -m {{ letsencrypt_email }} -d {{ item.cname }} {% for alias in item.alias %}-d {{ alias }}{% endfor %}
   args:
     creates: /etc/letsencrypt/live/{{item.cname}}/chain.pem
   loop: "{{ domains }}"
+
+- name: deconfigure temporary letsencrypt webroot
+  command: rm /var/www/letsencrypt
+  when: certbot_installed.changed
