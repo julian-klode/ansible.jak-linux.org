@@ -46,6 +46,12 @@ server {
         expires 365d;
     }
 
+    location = /favicon.ico {
+      return 204;
+      access_log     off;
+      log_not_found  off;
+    }
+
     {{ item.nginx_add_locations | default("") }}
  {% else %}
     return 301 https://{{item.cname}}$request_uri;
