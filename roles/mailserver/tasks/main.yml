@@ -1,2 +1,5 @@
+- name: configure mailname
+  copy: content="{{ domains[0].cname }}" dest=/etc/mailname
+
 - include: postfix.yml
 - include: rspamd.yml
