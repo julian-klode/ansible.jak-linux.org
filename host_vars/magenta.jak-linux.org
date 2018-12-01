@@ -32,6 +32,7 @@ domains:
         include         fastcgi_params;
         fastcgi_cache GO;
         fastcgi_cache_valid 200 10m;
+        expires 10m;
       }
     nginx_apparmor: |
       /run/mastodon-comments.sock rw,
