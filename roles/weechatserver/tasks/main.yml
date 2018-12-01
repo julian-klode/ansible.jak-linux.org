@@ -1,10 +1,39 @@
+- name: install weechat gpg key
+  apt_key:
+    id: 11E9DE8848F2B65222AA75B8D1820DB22A11534E
+    keyserver: keyserver.ubuntu.com
+    keyring: /etc/apt/trusted.gpg.d/weechat.gpg
+
+- name: add weechat preferences
+  copy:
+    content: |
+      Package: *
+      Pin: origin weechat.org
+      Pin-Priority: -1
+      
+      Package: weechat weechat-core weechat-curses weechat-dev weechat-doc weechat-headless weechat-javascript weechat-plugins weechat-python
+      Pin: origin weechat.org
+      Pin-Priority: 990
+      
+      Package: weechat-guile weechat-lua weechat-perl weechat-php weechat-ruby weechat-tcl
+      Pin: release *
+      Pin-Priority: -1
+    dest: /etc/apt/preferences.d/weechat.pref
+- name: add weechat repository
+  apt_repository:
+    repo: deb https://weechat.org/{{ansible_distribution| lower}} {{ ansible_lsb.codename | default(ansible_distribution_release) }} main
+    state: present
+    filename: weechat
+    update_cache: true
+
 - name: install weechat, tmux, mosh
   apt:
     name: "{{ packages }}"
   vars:
     packages:
-    - weechat
+    - weechat-curses
     - weechat-plugins
+    - weechat-python
     - tmux
     - mosh
 
