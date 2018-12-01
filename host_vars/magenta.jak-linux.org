@@ -41,3 +41,6 @@ domains:
     alias: []
     nginx_add_locations: |
       return 301 https://dep-team.pages.debian.net$request_uri;
+
+  - cname: mirror.fail
+    alias: [www.mirror.fail]
