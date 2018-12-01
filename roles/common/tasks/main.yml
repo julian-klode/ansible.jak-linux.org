@@ -6,6 +6,9 @@
 - name: install haveged
   apt: name=haveged state=present
 
+- name: install ca-certificates
+  apt: name=ca-certificates state=present
+
 - name: install apparmor
   apt:
     name: "{{ packages }}"
