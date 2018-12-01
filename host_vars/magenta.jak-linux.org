@@ -35,3 +35,8 @@ domains:
       }
     nginx_apparmor: |
       /run/mastodon-comments.sock rw,
+
+  - cname: dep.debian.net
+    alias: []
+    nginx_add_locations: |
+      return 301 https://dep-team.pages.debian.net$request_uri;
