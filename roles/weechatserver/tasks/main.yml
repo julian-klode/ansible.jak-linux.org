@@ -84,6 +84,15 @@
   when:
     weechat_relay_conf.stdout.find('weechat = 9000') == -1 or weechat_relay_conf.stdout.find('bind_address = "::ffff:127.0.0.1"') == -1
 
+- name: setup tmux
+  copy:
+    content: |
+      set -g status off
+      set-option -g set-titles on
+      set-option -g set-titles-string "#W"
+      set -g focus-events on
+    dest: /home/weechat/.tmux.conf
+
 # Configure firewall and check that ports work
 - name: ufw limit mosh
   ufw: rule=limit name=mosh
