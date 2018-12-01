@@ -1,0 +1,2 @@
+letsencrypt_email: jak@jak-linux.org
+ansible_python_interpreter: /usr/bin/python3

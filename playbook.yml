@@ -1,0 +1,18 @@
+---
+- hosts:
+     - dummy
+  roles:
+     - snake-oil-letsencrypt
+
+- hosts:
+     - production
+     - staging
+  roles:
+     - letsencrypt
+
+- hosts:
+     - all
+  roles:
+     - common
+     - weechatserver
+     - webserver

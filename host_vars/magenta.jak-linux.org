@@ -1,0 +1,22 @@
+nginx_conf:
+  weechat:
+    # Rate limit weechat
+    limit_req_zone $binary_remote_addr zone=weechat:10m rate=5r/m;
+  fastcgi:
+    fastcgi_cache_path /var/cache/nginx/fastcgi levels=1:2 keys_zone=GO:256m inactive=10m;
+    fastcgi_cache_key "$scheme$request_method$host$request_uri";
+    fastcgi_cache_use_stale error timeout invalid_header http_500 http_503;
+
+domains:
+  - cname: magenta.jak-linux.org
+    alias: []
+    nginx_add_locations: |
+      location /weechat {
+          proxy_pass http://localhost:9000/weechat; # Change the port to your relay's
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;   # These two lines ensure that the
+          proxy_set_header Connection "Upgrade";    # a WebSocket is used
+          proxy_read_timeout 604800;                # Prevent idle disconnects
+          proxy_set_header X-Real-IP $remote_addr;  # Let WeeChat see the client's IP
+          limit_req zone=weechat burst=1 nodelay;   # Brute force prevention
+      }
