@@ -1,0 +1,14 @@
+---
+
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: systemctl stop mastodon-comments.service
+  service:
+     name: mastodon-comments.service
+     state: stopped
+
+- name: aa-enforce usr.local.bin.mastodon-comments
+  command: aa-enforce usr.local.bin.mastodon-comments
+  when: ansible_apparmor["status"] == "enabled"

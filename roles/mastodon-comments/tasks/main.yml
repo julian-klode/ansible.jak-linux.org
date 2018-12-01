@@ -1,0 +1,38 @@
+---
+
+- name: build mastodon-comments
+  command: go get -v github.com/julian-klode/mastodon-comments
+  args:
+    creates: "{{ lookup('env', 'GOPATH') | default('~/go', true) }}/bin/mastodon-comments"
+  delegate_to: localhost
+
+- name: install mastodon-comments
+  copy:
+    src: "{{ lookup('env','GOPATH') | default('~/go', true) }}/bin/mastodon-comments"
+    dest: /usr/local/bin/mastodon-comments
+    mode: 0755
+
+- name: install mastodon-comments apparmor
+  copy:
+    src: "{{ lookup('env', 'GOPATH') | default('~/go', true) }}/src/github.com/julian-klode/mastodon-comments/apparmor.d/usr.local.bin.mastodon-comments"
+    dest: /etc/apparmor.d/usr.local.bin.mastodon-comments
+  notify:
+    - aa-enforce usr.local.bin.mastodon-comments
+    - systemctl stop mastodon-comments.service
+
+- name: install mastodon-comments systemd unit
+  copy:
+    src: "{{ lookup('env', 'GOPATH') | default('~/go', true) }}/src/github.com/julian-klode/mastodon-comments/systemd/system/{{item}}"
+    dest: "/etc/systemd/system/{{item}}"
+  loop:
+    - mastodon-comments.socket
+    - mastodon-comments.service
+  notify:
+    - systemctl daemon-reload
+
+- name: enable and start mastodon comments
+  service:
+     name: mastodon-comments.socket
+     enabled: true
+     state: started
+

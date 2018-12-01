@@ -8,6 +8,7 @@
   roles:
     - {role: ../roles/common}
     - {role: ../roles/snake-oil-letsencrypt}
+    - {role: ../roles/mastodon-comments}
     - {role: ../roles/mailserver}
     - {role: ../roles/webserver}
     - {role: ../roles/weechatserver}
