@@ -36,6 +36,7 @@
     - weechat-python
     - tmux
     - mosh
+    - aspell-en
 
 
 # Discretionary access control
