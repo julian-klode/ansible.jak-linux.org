@@ -34,6 +34,7 @@ domains:
         fastcgi_cache_valid 200 10m;
         expires 10m;
       }
+      error_page 404 /404.html;
     nginx_apparmor: |
       /run/mastodon-comments.sock rw,
 
