@@ -7,7 +7,7 @@
 - name: Enable incremental
   lineinfile:
     path: /etc/webalizer/webalizer.conf
-    regexp: '^#Incremental'
+    regexp: '^#?Incremental\b'
     line: 'Incremental    yes'
 
 - name: Set log file
