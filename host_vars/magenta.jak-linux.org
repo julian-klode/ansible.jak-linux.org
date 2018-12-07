@@ -45,3 +45,8 @@ domains:
 
   - cname: mirror.fail
     alias: [www.mirror.fail]
+
+  - cname: jak-software.de
+    alias: [www.jak-software.de]
+    nginx_add_locations: |
+      return 301 https://jak-linux.org/;
