@@ -50,3 +50,9 @@ domains:
     alias: [www.jak-software.de]
     nginx_add_locations: |
       return 301 https://jak-linux.org/;
+
+  - cname: www.julian-klode.de
+    alias: [julian-klode.de]
+
+  - cname: www.simon-klode.de
+    alias: [simon-klode.de]
