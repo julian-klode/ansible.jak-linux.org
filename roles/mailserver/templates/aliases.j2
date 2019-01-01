@@ -1,0 +1,20 @@
+# Ansible managed
+
+# RFC 2142: NETWORK OPERATIONS MAILBOX NAMES
+abuse:           root
+security:        root
+
+# RFC 2142: SUPPORT MAILBOX NAMES FOR SPECIFIC INTERNET SERVICES
+postmaster:      root
+hostmaster:      root
+webmaster:       root
+www:             webmaster
+
+#
+# Custom aliases
+{% for key, value in forwards.iteritems()  %}
+{{key}}: "|/usr/local/bin/postforward --path /usr/sbin:/sbin:/usr/bin:/bin {{value}}"
+{% endfor %}
+
+# Custom aliases
+{{ aliases }}

@@ -1,33 +1,86 @@
-- name: install nginx
-  apt: name=postfix state=present
-- service:
+---
+
+- name: install postfix and postsrsd
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - postfix
+    - postsrsd
+    state: present
+
+- name: install postsrsd apparmor profile
+  copy: src=etc/apparmor.d/usr.sbin.postsrsd dest=/etc/apparmor.d/usr.sbin.postsrsd
+  register: postsrsd_apparmor
+
+- name: enforce postsrsd
+  command: aa-enforce usr.sbin.postsrsd
+  when: postsrsd_apparmor.changed and ansible_apparmor["status"] == "enabled"
+
+- name: esure postsrsd is running
+  service:
+    name: postsrsd
+    state: started
+    enabled: yes
+
+- name: esure postfix is running
+  service:
     name: postfix
     state: started
     enabled: yes
-  name: ensure postfix is running
+
 - name: install postfix master.cf
   copy: src=etc/postfix/master.cf dest=/etc/postfix/master.cf
   register: postfix_master_cf
-- when: postfix_master_cf.changed
+
+- name: install postfix main.cf
+  template: src=main.cf.j2 dest=/etc/postfix/main.cf
+  register: postfix_main_cf
+
+- name: install aliases
+  template: src=aliases.j2 dest=/etc/aliases
+  notify: newaliases
+
+- name: reload postfix on config change
   service:
     name: postfix
     state: reloaded
+  when: postfix_master_cf.changed or postfix_main_cf.changed
 
 # Open ports
-- ufw: rule=allow name=Postfix
-- ufw: rule=limit name="Postfix Submission"
+- name: ufw allow Postfix
+  ufw: rule=allow name=Postfix
+
+- name: ufw allow Postfix Submission
+  ufw: rule=limit name="Postfix Submission"
+
 # Check availability
-- wait_for:
+- name: ensure smtp port is open
+  wait_for:
     host: "{{ inventory_hostname }}"
     port: 25
     timeout: 1
   delegate_to: localhost
-  name: ensure smtp port is open
   tags: assert
-- wait_for:
+
+- name: ensure submit port is open
+  wait_for:
     host: "{{ inventory_hostname }}"
     port: 587
     timeout: 1
   delegate_to: localhost
-  name: ensure submit port is open
   tags: assert
+
+# Install postward
+- name: build postforward
+  command: go get -v github.com/zoni/postforward
+  args:
+    creates: "{{ lookup('env', 'GOPATH') | default('~/go', true) }}/bin/postforward"
+  delegate_to: localhost
+
+- name: install postforward
+  copy: src={{ lookup('env','GOPATH') | default('~/go', true) }}/bin/postforward dest=/usr/local/bin/postforward mode=0755
+
+- name: install postforward apparmor profile
+  copy: src=etc/apparmor.d/usr.local.bin.postforward dest=/etc/apparmor.d/usr.local.bin.postforward
+  notify: aa-enforce usr.local.bin.postforward

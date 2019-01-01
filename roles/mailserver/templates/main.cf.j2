@@ -1,0 +1,63 @@
+# Ansible managed
+
+# Hello!
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+readme_directory = no
+
+# See http://www.postfix.org/COMPATIBILITY_README.html -- default to 2 on
+# fresh installs.
+compatibility_level = 2
+
+# TLS parameters
+smtpd_use_tls=yes
+smtpd_tls_cert_file=/etc/letsencrypt/live/{{ domains[0].cname }}/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/{{ domains[0].cname }}/privkey.pem
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtpd_tls_security_level = may
+smtpd_tls_protocols = !SSLv2, !SSLv3
+smtpd_tls_ciphers = high
+
+# Outbound SMTP
+smtp_tls_security_level = may
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_protocols = !SSLv2, !SSLv3
+smtp_tls_ciphers = high
+
+# Relay restrictions
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+
+# Hostname configuration and supported domains
+myhostname = {{ domains[0].cname }}
+myorigin = /etc/mailname
+mydestination = $myhostname, {% for domain in domains %} {{domain.cname}}, {% for alias in domain.alias %} {{alias}}, {% endfor %} {% endfor %} localhost
+
+# Misc
+relayhost =
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+
+# Listen addresses
+inet_interfaces = all
+inet_protocols = all
+
+# SPAM / DKIM
+smtpd_milters = inet:localhost:11332
+non_smtpd_milters = inet:localhost:11332
+milter_protocol = 6
+milter_mail_macros =  i {mail_addr} {client_addr} {client_name} {auth_authen}
+milter_default_action = accept
+
+# Local delivery configuration
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+mailbox_transport = lmtp:unix:private/dovecot-lmtp
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+# Handle SRS for forwarding
+recipient_canonical_maps = tcp:localhost:10002
+recipient_canonical_classes= envelope_recipient,header_recipient
