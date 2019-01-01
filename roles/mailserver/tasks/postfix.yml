@@ -79,7 +79,7 @@
   delegate_to: localhost
 
 - name: install postforward
-  copy: src={{ lookup('env','GOPATH') | default('~/go', true) }}/bin/postforward dest=/usr/local/bin/postforward
+  copy: src={{ lookup('env','GOPATH') | default('~/go', true) }}/bin/postforward dest=/usr/local/bin/postforward mode=0755
 
 - name: install postforward apparmor profile
   copy: src=etc/apparmor.d/usr.local.bin.postforward dest=/etc/apparmor.d/usr.local.bin.postforward
