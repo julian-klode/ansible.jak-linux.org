@@ -33,7 +33,7 @@ smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_una
 # Hostname configuration and supported domains
 myhostname = {{ domains[0].cname }}
 myorigin = /etc/mailname
-mydestination = $myhostname, {% for domain in domains %} {{domain.cname}}, {% endfor %} localhost
+mydestination = $myhostname, {% for domain in domains %} {{domain.cname}}, {% for alias in domain.alias %} {{alias}}, {% endfor %} {% endfor %} localhost
 
 # Misc
 relayhost =
