@@ -21,6 +21,18 @@
     - aa-enforce rspamd
     - restart rspamd
 
+- name: install rspamd configuration
+  copy:
+    src: etc/rspamd/local.d/{{item}}
+    dest: /etc/rspamd/local.d/{{item}}
+  loop:
+    - actions.conf
+    - classifier-bayes.conf
+    - milter_headers.conf
+    - redis.conf
+  notify:
+    - restart rspamd
+
 - name: install rspamd and redis
   apt:
     name: "{{ packages }}"
