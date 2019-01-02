@@ -21,6 +21,13 @@ domains:
           limit_req zone=weechat burst=1 nodelay;   # Brute force prevention
       }
 
+      location ^~ /rspamd {
+        proxy_pass       http://localhost:11334/;
+
+        proxy_set_header Host      $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      }
+
   - cname: jak-linux.org
     alias: [www.jak-linux.org]
 
