@@ -21,4 +21,9 @@ script:
     grep -q 'changed=0.*failed=0' idempotence.log
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
+  - sudo docker exec "$(cat ${container_id})" env ANSIBLE_FORCE_COLOR=1 ansible-playbook --check -v $PWD/test/test.yml 2>&1 | tee idempotence.log
+  - >
+    grep -q 'changed=0.*failed=0' idempotence.log
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
   - sudo docker rm -f "$(cat ${container_id})"

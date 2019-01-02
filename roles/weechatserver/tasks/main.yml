@@ -64,6 +64,7 @@
 
 - name: Check if weechat is running and enforced
   shell: ps auxZ | grep weechat | grep -v grep | grep .
+  check_mode: no
   changed_when: false
 
 # Wait for weechat to generate relay conf and fifo so we can configure relay
@@ -72,8 +73,9 @@
 - name: Check that control fifo exists
   wait_for: path=/home/weechat/.weechat/weechat_fifo timeout=1
 
-- shell: cat /home/weechat/.weechat/relay.conf
+- command: cat /home/weechat/.weechat/relay.conf
   register: weechat_relay_conf
+  check_mode: no
   changed_when: false
 
 - name: add weechat relay
