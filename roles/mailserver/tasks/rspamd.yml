@@ -33,10 +33,10 @@
   notify:
     - restart rspamd
 
-- name: install rspamd.local.lua
-  copy:
-    src: etc/rspamd/rspamd.local.lua
-    dest: /etc/rspamd/rspamd.local.lua
+- name: remove rspamd.local.lua
+  file:
+    path: etc/rspamd/rspamd.local.lua
+    state: absent
   notify:
     - restart rspamd
 
