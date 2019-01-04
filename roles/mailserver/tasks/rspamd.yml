@@ -33,6 +33,13 @@
   notify:
     - restart rspamd
 
+- name: install rspamd.local.lua
+  copy:
+    src: etc/rspamd/rspamd.local.lua
+    dest: /etc/rspamd/rspamd.local.lua
+  notify:
+    - restart rspamd
+
 - name: install rspamd and redis
   apt:
     name: "{{ packages }}"

@@ -72,15 +72,12 @@
   tags: assert
 
 # Install postward
-- name: build postforward
-  command: go get -v github.com/zoni/postforward
-  args:
-    creates: "{{ lookup('env', 'GOPATH') | default('~/go', true) }}/bin/postforward"
-  delegate_to: localhost
+- name: remove postforward
+  file:
+    path: /usr/local/bin/postforward
+    state: absent
 
-- name: install postforward
-  copy: src={{ lookup('env','GOPATH') | default('~/go', true) }}/bin/postforward dest=/usr/local/bin/postforward mode=0755
-
-- name: install postforward apparmor profile
-  copy: src=etc/apparmor.d/usr.local.bin.postforward dest=/etc/apparmor.d/usr.local.bin.postforward
-  notify: aa-enforce usr.local.bin.postforward
+- name: remove postforward apparmor profile
+  file:
+    path: /etc/apparmor.d/usr.local.bin.postforward
+    state: absent
