@@ -15,6 +15,7 @@
   roles:
      - common
      - dns
+     - mailserver
      - mastodon-comments
      - weechatserver
      - webalizer
