@@ -1,0 +1,24 @@
+- name: install bind9 and dns-root-data
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - bind9
+    - dns-root-data
+    state: present
+
+- name: point resolv.conf to 127.0.0.1
+  copy:
+    dest: /etc/resolv.conf
+    content: |
+      # Managed by Ansible.
+      nameserver 127.0.0.1
+      
+      search jak-linux.org
+
+- name: stop and mask systemd-resolved
+  systemd:
+    name: systemd-resolved.service
+    state: stopped
+    masked: yes
+
