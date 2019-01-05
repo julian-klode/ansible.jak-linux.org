@@ -1,3 +1,12 @@
+- name: install bind9 configuration
+  copy:
+    src: etc/bind/{{item}}
+    dest: /etc/bind/{{item}}
+    mode: 0644
+  loop:
+    - named.conf.options
+
+
 - name: install bind9 and dns-root-data
   apt:
     name: "{{ packages }}"
