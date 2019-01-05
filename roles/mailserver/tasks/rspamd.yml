@@ -21,6 +21,12 @@
     - aa-enforce rspamd
     - restart rspamd
 
+- name: create rspamd configuration directory
+  file:
+    path: /etc/rspamd/local.d/
+    state: directory
+    mode: 0755
+
 - name: install rspamd configuration
   copy:
     src: etc/rspamd/local.d/{{item}}
