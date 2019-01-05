@@ -9,6 +9,14 @@
     - postsrsd
     state: present
 
+- name: install postfix apparmor profile
+  copy: src=etc/apparmor.d/postfix dest=/etc/apparmor.d/postfix
+  register: postfix_apparmor
+  
+- name: enforce postfix
+  command: aa-enforce /etc/apparmor.d/postfix
+  when: postfix_apparmor.changed and ansible_apparmor["status"] == "enabled"
+
 - name: install postsrsd apparmor profile
   copy: src=etc/apparmor.d/usr.sbin.postsrsd dest=/etc/apparmor.d/usr.sbin.postsrsd
   register: postsrsd_apparmor

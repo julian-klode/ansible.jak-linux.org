@@ -1,0 +1,33 @@
+# Last Modified: Fri Nov 30 13:21:56 2018
+#include <tunables/global>
+
+profile postfix /usr/lib/postfix/sbin/* flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/ssl_certs>
+
+  capability kill,
+  capability dac_read_search,
+  capability setuid,
+  capability setgid,
+  capability sys_chroot,
+
+  /etc/aliases.db rk,
+  /etc/mailname r,
+  /etc/postfix/** r,
+  /etc/postfix/ r,
+  /var/{lib,spool}/postfix/ rw,
+
+  /usr/local/bin/postforward mrPx,
+  /{usr/,}{s,}bin/* mrix,
+  /usr/lib/postfix/** mrix,
+  /var/{lib,spool}/postfix/** rwmk,
+  /var/mail/** wk,
+  owner /lib/x86_64-linux-gnu/ld-*.so mr,
+
+  /etc/letsencrypt/** r,
+
+  signal peer=@{profile_name},
+
+  network unix stream,
+}
