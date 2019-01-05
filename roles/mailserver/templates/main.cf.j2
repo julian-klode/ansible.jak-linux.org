@@ -27,8 +27,19 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtp_tls_protocols = !SSLv2, !SSLv3
 smtp_tls_ciphers = high
 
-# Relay restrictions
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+# Relay Restrictions
+smtpd_relay_restrictions = reject_non_fqdn_recipient reject_unknown_recipient_domain permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+
+# Helo restrictions (hosts not having a proper fqdn)
+smtpd_helo_required = yes
+smtpd_helo_restrictions = permit_mynetworks reject_invalid_helo_hostname reject_non_fqdn_helo_hostname reject_unknown_helo_hostname
+
+# Data restrictions (clients sending to early)
+smtpd_data_restrictions = reject_unauth_pipelining
+
+# Client restrictions (unknown hostnames)
+smtpd_client_restrictions = permit_mynetworks reject_unknown_client_hostname
+
 
 # Hostname configuration and supported domains
 myhostname = {{ domains[0].cname }}
