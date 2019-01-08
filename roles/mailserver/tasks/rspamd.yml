@@ -39,6 +39,17 @@
   notify:
     - restart rspamd
 
+- name: install rspamd greylist whitelist
+  copy:
+    content: |
+      # Managed by Ansible
+      {% for item in rspamd_greylist_whitelist_domains %}
+      {{ item }}
+      {% endfor %}
+    dest: /etc/rspamd/local.d/greylist-whitelist-domains.inc
+  notify:
+    - restart rspamd
+
 - name: remove rspamd.local.lua
   file:
     path: etc/rspamd/rspamd.local.lua

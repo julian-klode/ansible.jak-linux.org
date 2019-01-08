@@ -84,3 +84,7 @@ forwards:
 aliases: |
   root: jak
   julian: jak
+
+rspamd_greylist_whitelist_domains:
+  - debian.org
+  - canonical.com
