@@ -1,4 +1,4 @@
-- name: restart bind9
+- name: restart unbound
   service:
-    name: bind9
+    name: unbound
     state: restarted

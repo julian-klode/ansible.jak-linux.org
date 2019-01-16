@@ -1,0 +1,9 @@
+- name: install unbound
+  apt:
+    name: "unbound"
+
+- name: unbound is enabled and running
+  service:
+    name: unbound
+    enabled: true
+    state: started
