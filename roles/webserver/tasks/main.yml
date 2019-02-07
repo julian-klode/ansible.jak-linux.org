@@ -108,3 +108,12 @@
   wait_for: host="{{ inventory_hostname }}" port=443 timeout=1
   delegate_to: localhost
   tags: assert
+
+
+- name: install certbot deploy hook
+  copy:
+    content: |
+      #!/bin/sh
+      systemctl reload nginx
+    dest: /etc/letsencrypt/renewal-hooks/deploy/nginx
+    mode: 0755

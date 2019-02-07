@@ -17,3 +17,8 @@
     warn: false
     creates: /etc/letsencrypt/live/{{item.cname}}/chain.pem
   loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
+
+- name: create fake hooks directory
+  file:
+    path: /etc/letsencrypt/renewal-hooks/deploy
+    state: directory

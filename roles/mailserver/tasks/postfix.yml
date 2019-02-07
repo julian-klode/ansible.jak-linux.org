@@ -89,3 +89,12 @@
   file:
     path: /etc/apparmor.d/usr.local.bin.postforward
     state: absent
+
+
+- name: install certbot deploy hook
+  copy:
+    content: |
+      #!/bin/sh
+      systemctl reload postfix
+    dest: /etc/letsencrypt/renewal-hooks/deploy/postfix
+    mode: 0755
