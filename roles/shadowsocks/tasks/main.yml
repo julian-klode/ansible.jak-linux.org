@@ -1,0 +1,13 @@
+- name: install shadowsocks-libev client
+  apt:
+    name: "{{packages}}"
+  vars:
+    packages:
+      - shadowsocks-libev
+
+- name: install ss-server apparmor
+  copy:
+    src: etc/apparmor.d/usr.bin.ss-server
+    dest: /etc/apparmor.d/usr.bin.ss-server
+  notify:
+    - aa-enforce usr.bin.ss-server

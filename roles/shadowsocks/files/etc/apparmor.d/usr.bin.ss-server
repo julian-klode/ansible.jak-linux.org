@@ -1,0 +1,12 @@
+# Managed by Ansible
+#
+#include <tunables/global>
+
+/usr/bin/ss-server {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  /etc/shadowsocks-libev/*.json r,
+  /lib/x86_64-linux-gnu/ld-*.so mr,
+  /usr/bin/ss-server mr,
+}

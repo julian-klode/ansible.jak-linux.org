@@ -10,6 +10,7 @@
     - {role: ../roles/snake-oil-letsencrypt}
     - {role: ../roles/mastodon-comments}
     - {role: ../roles/mailserver}
+    - {role: ../roles/shadowsocks}
     - {role: ../roles/webalizer}
     - {role: ../roles/webserver}
     - {role: ../roles/weechatserver}

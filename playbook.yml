@@ -17,6 +17,7 @@
      - dns
      - mailserver
      - mastodon-comments
+     - shadowsocks
      - weechatserver
      - webalizer
      - webserver

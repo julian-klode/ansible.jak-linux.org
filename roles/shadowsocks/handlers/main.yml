@@ -1,0 +1,10 @@
+- name: aa-enforce usr.bin.ss-server
+  command: aa-enforce usr.bin.ss-server
+  notify:
+    - systemctl restart shadowsocks-libev.service
+  when: ansible_apparmor["status"] == "enabled"
+
+- name: systemctl restart shadowsocks-libev.service
+  systemd:
+    name: shadowsocks-libev.service
+    state: restarted
