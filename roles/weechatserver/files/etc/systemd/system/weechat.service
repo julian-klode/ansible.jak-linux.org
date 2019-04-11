@@ -4,7 +4,7 @@ Description=Weechat IRC Client (in tmux)
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/tmux -u -2 new-session -d -s irc /usr/bin/weechat
+ExecStart=/usr/bin/tmux -u -2 new-session -d -s irc /usr/bin/weechat --upgrade
 User=weechat
 Group=weechat
 Restart=on-failure
