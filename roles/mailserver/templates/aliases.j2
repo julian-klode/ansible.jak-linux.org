@@ -11,7 +11,7 @@ webmaster:       root
 www:             webmaster
 
 # Forwarding
-{% for key, value in forwards.iteritems()  %}
+{% for key, value in forwards|dictsort %}
 {{key}}: {{value}}
 {% endfor %}
 
