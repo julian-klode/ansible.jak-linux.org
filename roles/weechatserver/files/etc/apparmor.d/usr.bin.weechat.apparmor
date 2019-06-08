@@ -28,4 +28,7 @@
   owner @{HOME}/.weechat/ rw,
   owner @{HOME}/.weechat/** rw,
   owner @{HOME}/.weechat/weechat.log rwk,
+
+  # motd plugin
+  /run/motd.dynamic r,
 }

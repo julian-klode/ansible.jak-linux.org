@@ -59,6 +59,17 @@
     - systemctl daemon-reload
     - systemctl restart weechat
 
+# motd plugin
+- name: install weechat python autoload directory
+  file: dest=/home/weechat/.weechat/python/autoload state=directory
+
+- name: install weechat motd plugin
+  copy: src=motd.py dest=/home/weechat/.weechat/python/motd.py
+
+- name: autoload weechat motd plugin
+  file: src=../motd.py dest=/home/weechat/.weechat/python/autoload/motd.py state=link
+
+# checks
 - name: ensure weechat is running
   service: name=weechat state=started enabled=true
 
