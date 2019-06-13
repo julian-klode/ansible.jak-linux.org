@@ -4,6 +4,7 @@
 
 /usr/bin/weechat {
   #include <abstractions/base>
+  #include <abstractions/consoles>
   #include <abstractions/nameservice>
   #include <abstractions/aspell>
   #include <abstractions/python>
