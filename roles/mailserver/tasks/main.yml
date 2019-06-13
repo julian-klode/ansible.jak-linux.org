@@ -3,4 +3,5 @@
 
 - include: rspamd.yml
 - include: dovecot.yml
+- include: gpgmymail.yml
 - include: postfix.yml

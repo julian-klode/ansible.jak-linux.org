@@ -1,0 +1,15 @@
+---
+
+- name: install python3-gnupg
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - python3-gnupg
+    state: present
+
+- name: install gpgmymail
+  copy:
+    src: usr/local/lib/dovecot-sieve-filters/gpgmymail
+    dest: /usr/local/lib/dovecot-sieve-filters/gpgmymail
+    mode: 0755
