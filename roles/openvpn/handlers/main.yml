@@ -1,0 +1,11 @@
+---
+
+- name: restart openvpn@server
+  service:
+    name: openvpn@server
+    state: restarted
+
+- name: restart procps
+  service:
+    name: procps
+    state: restarted
