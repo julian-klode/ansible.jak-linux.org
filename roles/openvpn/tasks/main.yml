@@ -59,6 +59,12 @@
     regexp: '^DEFAULT_FORWARD_POLICY='
     line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
 
+- name: ufw allow openvpn
+  ufw:
+    port: 1194
+    proto: udp
+    rule: allow
+
 - name: install forwarding
   copy:
     dest: /etc/sysctl.d/60-openvpn.conf
