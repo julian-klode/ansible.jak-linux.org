@@ -10,8 +10,7 @@
   capability setgid,
   capability setuid,
 
-  /bin/ip Ux,
-  /bin/ip mr,
+  /bin/ip mrix,
   /lib/x86_64-linux-gnu/ld-*.so mr,
   /run/systemd/notify w,
   /usr/sbin/openvpn mr,
