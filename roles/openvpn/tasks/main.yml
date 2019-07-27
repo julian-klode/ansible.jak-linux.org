@@ -17,6 +17,17 @@
   notify:
     - aa-enforce usr.sbin.openvpn
 
+- name: Add openvpn group
+  group:
+    name: openvpn
+    system: true
+
+- name: Add openvpn user
+  user:
+    name: openvpn
+    group: openvpn
+    system: true
+
 - name: install openvpn@ dropin directory
   file:
     path: /etc/systemd/system/openvpn@.service.d
