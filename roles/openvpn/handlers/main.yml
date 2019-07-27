@@ -9,3 +9,9 @@
   service:
     name: procps
     state: restarted
+
+- name: aa-enforce usr.sbin.openvpn
+  command: aa-enforce usr.sbin.openvpn
+  when: ansible_apparmor["status"] == "enabled"
+  notify:
+    - restart openvpn@server

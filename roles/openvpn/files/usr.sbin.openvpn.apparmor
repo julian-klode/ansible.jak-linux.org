@@ -1,0 +1,32 @@
+# Managed by Ansible
+# Last Modified: Sat Jul 27 01:55:53 2019
+#include <tunables/global>
+
+/usr/sbin/openvpn flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  capability net_admin,
+  capability setgid,
+  capability setuid,
+
+  /bin/ip Ux,
+  /bin/ip mr,
+  /lib/x86_64-linux-gnu/ld-*.so mr,
+  /run/systemd/notify w,
+  /usr/sbin/openvpn mr,
+  /var/log/openvpn/ipp.txt w,
+  /var/log/openvpn/openvpn-status.log w,
+  owner /dev/net/tun rw,
+  owner /etc/openvpn/ca.crt r,
+  owner /etc/openvpn/dh2048.pem r,
+  owner /etc/openvpn/server.conf r,
+  owner /etc/openvpn/server.crt r,
+  owner /etc/openvpn/server.key r,
+  owner /etc/openvpn/ta.key r,
+  owner /etc/ssl/openssl.cnf r,
+  owner /proc/*/net/route r,
+  owner /run/openvpn/server.pid w,
+  owner /var/log/openvpn/ipp.txt rw,
+
+}
