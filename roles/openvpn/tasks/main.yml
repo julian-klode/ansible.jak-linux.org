@@ -16,8 +16,20 @@
     dest: /etc/apparmor.d/usr.sbin.openvpn
   notify:
     - aa-enforce usr.sbin.openvpn
+
+- name: install openvpn@ dropin directory
+  file:
+    path: /etc/systemd/system/openvpn@.service.d
+    state: directory
+
+- name: install openvpn@ dropin
+  copy:
+    src: openvpn@.service
+    dest: /etc/systemd/system/openvpn@.service.d/override.conf
+  notify:
+    - systemctl daemon-reload
     - restart openvpn@server
-    
+
 - name: ufw before rule
   blockinfile:
     path: /etc/ufw/before.rules
