@@ -16,10 +16,16 @@
     creates: /var/local/borg/id_rsa
   register: create_borg_key
 
-- name: read borg key
+- name: read borg ssh key
   slurp:
     src: /var/local/borg/id_rsa.pub
   register: public_borg_key
+
+- name: Synchronize local borg keys
+  synchronize:
+    mode: pull
+    src: /var/local/borg/.config/borg/keys/
+    dest: state/keys.{{ domains[0].cname }}
 
 - name: echo borg key
   local_action:
