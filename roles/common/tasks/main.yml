@@ -27,5 +27,9 @@
     - apparmor-utils
     - apparmor-profiles
 
+- name: install etckeeper
+  apt:
+    name: etckeeper
+
 - include: ufw.yml
 - include: ssh.yml
