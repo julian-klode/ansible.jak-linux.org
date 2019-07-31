@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+{{item.pre|default("")}}
+
+export BORG_REMOTE_PATH="{{item.borg_remote_path | default("borg")}}"
+export BORG_RSH="ssh -i /var/local/borg/id_rsa -o IdentitiesOnly=yes"
+export BORG_BASE_DIR="/var/local/borg"
+
+borg create $args --one-file-system \
+                  --exclude-caches  \
+                  {{item.create_policy}} \
+                  {{item.server_user}}@{{item.server}}:{{item.repository}}::{{item.prefix}}-{now:%Y-%m-%dT%H:%M}  {{item.sources}}
+
+borg prune  {{item.prune_policy}} \
+           --prefix \
+           {{item.prefix}} {{item.server_user}}@{{item.server}}:{{item.repository}}
+
+
+{{item.post|default("")}}

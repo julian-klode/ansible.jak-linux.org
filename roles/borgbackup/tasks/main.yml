@@ -1,0 +1,36 @@
+---
+
+- name: install borgbackup
+  apt:
+    name: borgbackup
+    state: present
+
+- name: install borg state directory
+  file:
+    dest: /var/local/borg/
+    state: directory
+
+- name: create borg keys
+  command: ssh-keygen -N "" -t rsa -f /var/local/borg/id_rsa
+  args:
+    creates: /var/local/borg/id_rsa
+  register: create_borg_key
+
+- name: read borg key
+  slurp:
+    src: /var/local/borg/id_rsa.pub
+  register: public_borg_key
+
+- name: echo borg key
+  local_action:
+    module: copy
+    content: command="borg1 serve {% for item in backups|default([]) %}--restrict-to-path {{item.repository}}{%endfor%}" {{public_borg_key.content|b64decode}}
+    dest: state/authorized_keys.{{ domains[0].cname }}
+
+
+- name: install cron jobs
+  template:
+    src: borg.cron.j2
+    dest: /etc/cron.daily/borg-{{item.name}}
+    mode: 0755
+  with_items: "{{backups|default([])}}"

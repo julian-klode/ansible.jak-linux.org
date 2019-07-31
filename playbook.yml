@@ -21,3 +21,4 @@
      - weechatserver
      - webalizer
      - webserver
+     - borgbackup

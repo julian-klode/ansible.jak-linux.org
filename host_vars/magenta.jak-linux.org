@@ -92,3 +92,14 @@ aliases: |
 rspamd_greylist_whitelist_domains:
   - debian.org
   - canonical.com
+
+backups:
+  - name: root
+    server_user: 16495
+    server: ch-s010.rsync.net
+    repository: /data1/home/16495/magenta
+    prefix: magenta
+    prune_policy: -d 7 -w 4 -m 12 -y 10
+    create_policy: -C lz4
+    sources: /
+    borg_remote_path: borg1
