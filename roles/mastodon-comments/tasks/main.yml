@@ -11,6 +11,9 @@
     src: "{{ lookup('env','GOPATH') | default('~/go', true) }}/bin/mastodon-comments"
     dest: /usr/local/bin/mastodon-comments
     mode: 0755
+  notify:
+    - systemctl stop mastodon-comments.service
+
 
 - name: install mastodon-comments apparmor
   copy:
