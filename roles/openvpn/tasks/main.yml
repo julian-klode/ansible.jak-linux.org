@@ -73,3 +73,10 @@
       net.ipv4.ip_forward=1
       net.ipv6.conf.all.forwarding=1
   notify: restart procps
+
+- name: enable and start openvpn
+  systemd:
+    name: openvpn@server.service
+    state: started
+    enabled: yes
+    masked: no
