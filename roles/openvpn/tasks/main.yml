@@ -1,0 +1,82 @@
+---
+
+- name: install openvpn
+  apt:
+    name: openvpn
+
+- name: install openvpn server.conf
+  template:
+    src: server.conf.j2
+    dest: /etc/openvpn/server.conf
+  notify: restart openvpn@server
+
+- name: install openvpn apparmor
+  copy:
+    src: usr.sbin.openvpn.apparmor
+    dest: /etc/apparmor.d/usr.sbin.openvpn
+  notify:
+    - aa-enforce usr.sbin.openvpn
+
+- name: Add openvpn group
+  group:
+    name: openvpn
+    system: true
+
+- name: Add openvpn user
+  user:
+    name: openvpn
+    group: openvpn
+    system: true
+
+- name: install openvpn@ dropin directory
+  file:
+    path: /etc/systemd/system/openvpn@.service.d
+    state: directory
+
+- name: install openvpn@ dropin
+  copy:
+    src: openvpn@.service
+    dest: /etc/systemd/system/openvpn@.service.d/override.conf
+  notify:
+    - systemctl daemon-reload
+    - restart openvpn@server
+
+- name: ufw before rule
+  blockinfile:
+    path: /etc/ufw/before.rules
+    block: |
+      # NAT table rules
+      *nat
+      :POSTROUTING ACCEPT [0:0]
+      -A POSTROUTING -s 10.8.0.0/8 -o eth0 -j MASQUERADE
+      COMMIT
+    marker: "# {mark} ANSIBLE MANAGED OPENVPN BLOCK"
+    insertbefore: Don't delete these required lines, otherwise there will be errors
+
+- name: enable forwarding
+  lineinfile:
+    path: /etc/default/ufw
+    regexp: '^DEFAULT_FORWARD_POLICY='
+    line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
+
+- name: ufw allow openvpn
+  ufw:
+    port: 1194
+    proto: udp
+    rule: allow
+
+- name: install forwarding
+  copy:
+    dest: /etc/sysctl.d/60-openvpn.conf
+    content: |
+      # Managed by Ansible
+      net.ipv4.ip_forward=1
+      net.ipv6.conf.all.forwarding=1
+  notify: restart procps
+
+- name: enable and start openvpn
+  systemd:
+    name: openvpn@server.service
+    state: started
+    enabled: yes
+    masked: no

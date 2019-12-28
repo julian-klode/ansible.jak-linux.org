@@ -1,0 +1,20 @@
+---
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: restart openvpn@server
+  service:
+    name: openvpn@server
+    state: restarted
+
+- name: restart procps
+  service:
+    name: procps
+    state: restarted
+
+- name: aa-enforce usr.sbin.openvpn
+  command: aa-enforce usr.sbin.openvpn
+  when: ansible_apparmor["status"] == "enabled"
+  notify:
+    - restart openvpn@server
