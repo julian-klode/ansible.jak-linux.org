@@ -79,7 +79,7 @@ def encrypt(message: email.message.Message, recipients: typing.List[str]) -> str
 def decrypt(message: email.message.Message) -> str:
     """Decrypt the given message"""
     with gpg.Context(armor=True) as c:
-        content, _res, _is_mime, _signatures = c.decrypt(message.as_bytes())
+        content, _decrypt_res, _verify_res = c.decrypt(message.as_bytes())
         return content
 
 
