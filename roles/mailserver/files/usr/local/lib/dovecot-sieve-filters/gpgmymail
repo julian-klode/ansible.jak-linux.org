@@ -31,18 +31,23 @@ import email.mime.multipart
 import email.mime.message
 import typing
 
-import gnupg        # type: ignore
+import gpg        # type: ignore
 
 
 def encrypt(message: email.message.Message, recipients: typing.List[str]) -> str:
     """Encrypt given message"""
-    encrypted_content = gnupg.GPG().encrypt(message.as_string(), recipients)
+    with gpg.Context(armor=True) as c:
+        keys = []
+        for r in recipients:
+            keys += list(c.keylist(r))
+
+        encrypted_content, _res, _ = c.encrypt(message.as_bytes(), keys, sign=False)
     if not encrypted_content:
         raise ValueError(encrypted_content.status)
 
     # Build the parts
     enc = email.mime.application.MIMEApplication(
-        _data=str(encrypted_content).encode(),
+        _data=encrypted_content,
         _subtype='octet-stream',
         _encoder=email.encoders.encode_7or8bit)
 
@@ -66,12 +71,14 @@ def encrypt(message: email.message.Message, recipients: typing.List[str]) -> str
         if key.lower() not in headers_not_to_override:
             encmsg[key] = value
 
-    return encmsg.as_string()
+    return encmsg.as_bytes()
 
 
 def decrypt(message: email.message.Message) -> str:
     """Decrypt the given message"""
-    return str(gnupg.GPG().decrypt(message.as_string()))
+    with gpg.Context(armor=True) as c:
+        content, _res, _is_mime, _signatures = c.decrypt(message.as_bytes())
+        return content
 
 
 def main() -> None:
@@ -83,12 +90,12 @@ def main() -> None:
     parser.add_argument('recipient', nargs='*',
                         help="key id or email of keys to encrypt for")
     args = parser.parse_args()
-    msg = email.message_from_file(sys.stdin)
+    msg = email.message_from_binary_file(sys.stdin.buffer)
 
     if args.decrypt:
-        sys.stdout.write(decrypt(msg))
+        sys.stdout.buffer.write(decrypt(msg))
     else:
-        sys.stdout.write(encrypt(msg, args.recipient))
+        sys.stdout.buffer.write(encrypt(msg, args.recipient))
 
 
 if __name__ == '__main__':
