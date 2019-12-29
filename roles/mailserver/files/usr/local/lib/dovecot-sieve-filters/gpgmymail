@@ -31,7 +31,7 @@ import email.mime.multipart
 import email.mime.message
 import typing
 
-import gpg        # type: ignore
+import gpg  # type: ignore
 
 
 def encrypt(message: email.message.Message, recipients: typing.List[str]) -> str:
@@ -48,19 +48,21 @@ def encrypt(message: email.message.Message, recipients: typing.List[str]) -> str
     # Build the parts
     enc = email.mime.application.MIMEApplication(
         _data=encrypted_content,
-        _subtype='octet-stream',
-        _encoder=email.encoders.encode_7or8bit)
+        _subtype="octet-stream",
+        _encoder=email.encoders.encode_7or8bit,
+    )
 
     control = email.mime.application.MIMEApplication(
-        _data=b'Version: 1\n',
+        _data=b"Version: 1\n",
         _subtype='pgp-encrypted; name="msg.asc"',
-        _encoder=email.encoders.encode_7or8bit)
-    control['Content-Disposition'] = 'inline; filename="msg.asc"'
+        _encoder=email.encoders.encode_7or8bit,
+    )
+    control["Content-Disposition"] = 'inline; filename="msg.asc"'
 
     # Put the parts together
     encmsg = email.mime.multipart.MIMEMultipart(
-        'encrypted',
-        protocol='application/pgp-encrypted')
+        "encrypted", protocol="application/pgp-encrypted"
+    )
     encmsg.attach(control)
     encmsg.attach(enc)
 
@@ -83,12 +85,13 @@ def decrypt(message: email.message.Message) -> str:
 
 def main() -> None:
     """Program entry"""
-    parser = argparse.ArgumentParser(
-        description="Encrypt/Decrypt mail using GPG/MIME")
-    parser.add_argument('-d', '--decrypt', action="store_true",
-                        help="Decrypt rather than encrypt")
-    parser.add_argument('recipient', nargs='*',
-                        help="key id or email of keys to encrypt for")
+    parser = argparse.ArgumentParser(description="Encrypt/Decrypt mail using GPG/MIME")
+    parser.add_argument(
+        "-d", "--decrypt", action="store_true", help="Decrypt rather than encrypt"
+    )
+    parser.add_argument(
+        "recipient", nargs="*", help="key id or email of keys to encrypt for"
+    )
     args = parser.parse_args()
     msg = email.message_from_binary_file(sys.stdin.buffer)
 
@@ -98,5 +101,5 @@ def main() -> None:
         sys.stdout.buffer.write(encrypt(msg, args.recipient))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
