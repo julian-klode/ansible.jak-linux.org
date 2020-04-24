@@ -2,5 +2,13 @@
 - name: install ufw
   apt: name=ufw
 
+# CI
+- name: disable ufw ipv6
+  lineinfile:
+    path: /etc/default/ufw
+    regexp: '^IPV6='
+    line: 'IPV6=no'
+  when: inventory_hostname == "localhost"
+
 - name: ensure ufw is enabled
   ufw: state=enabled
