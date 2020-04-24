@@ -97,6 +97,10 @@ rspamd_greylist_whitelist_domains:
   - debian.org
   - canonical.com
 
+smtp_bind_address:
+  ipv4: 195.201.138.240
+  ipv6: 2a01:4f8:1c1c:9761::1
+
 backups:
   - name: root
     server_user: 16495

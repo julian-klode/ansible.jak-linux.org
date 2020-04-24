@@ -56,8 +56,8 @@ recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = all
 
-smtp_bind_address = {{ ansible_default_ipv4.address | default("127.0.0.1") }}
-smtp_bind_address6 = {{ ansible_default_ipv6.address | default("::1") }}
+smtp_bind_address = {{ smtp_bind_address.ipv4 }}
+smtp_bind_address6 = {{ smtp_bind_address.ipv6 }}
 
 # SPAM / DKIM
 smtpd_milters = inet:localhost:11332
