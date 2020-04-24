@@ -31,5 +31,9 @@
   apt:
     name: etckeeper
 
+- name: install gpg
+  apt:
+    name: gpg
+
 - include: ufw.yml
 - include: ssh.yml
