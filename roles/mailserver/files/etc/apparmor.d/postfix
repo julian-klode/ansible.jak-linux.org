@@ -25,7 +25,10 @@ profile postfix /usr/lib/postfix/sbin/* flags=(attach_disconnected) {
   /var/mail/** wk,
   owner /lib/x86_64-linux-gnu/ld-*.so mr,
 
+  /etc/ssl/openssl.cnf r,
   /etc/letsencrypt/** r,
+
+  /proc/sys/kernel/random/boot_id r,
 
   signal peer=@{profile_name},
 
