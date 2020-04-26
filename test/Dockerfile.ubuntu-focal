@@ -1,0 +1,8 @@
+FROM ubuntu:focal
+
+RUN apt-get update && \
+	apt-get dist-upgrade -y && \
+	env DEBIAN_FRONTEND=noninteractive apt-get install -y systemd ansible git golang-go && \
+	echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+
+ENTRYPOINT ["/bin/systemd"]

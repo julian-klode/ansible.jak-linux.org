@@ -7,6 +7,6 @@
   capability setuid,
   capability sys_chroot,
   /etc/postsrsd.secret r,
-  /usr/sbin/postsrsd rm,
+  /usr/sbin/postsrsd mr,
 }
 
