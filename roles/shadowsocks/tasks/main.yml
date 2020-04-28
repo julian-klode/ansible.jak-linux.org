@@ -11,3 +11,9 @@
     dest: /etc/apparmor.d/usr.bin.ss-server
   notify:
     - aa-enforce usr.bin.ss-server
+
+- name: ufw allow 8338
+  ufw:
+    port: "8388"
+    comment: Shadowsocks
+    rule: allow
