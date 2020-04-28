@@ -1,0 +1,35 @@
+---
+
+- name: create wireguard peer config directory
+  local_action:
+    module: file
+    dest: state/wireguard-peers/{{ domains[0].cname }}
+    state: directory
+
+- name: create wireguard peer config files
+  local_action:
+    module: template
+    src: client.conf.j2
+    dest: state/wireguard-peers/{{ domains[0].cname }}/{{item.name}}.conf
+  with_items: "{{wireguard.peers}}"
+
+- name: install wireguard
+  apt:
+    name: wireguard
+
+- name: install wireguard server.conf
+  template:
+    src: server.conf.j2
+    dest: /etc/wireguard/wg0.conf
+  notify: restart wg-quick@wg0
+
+- name: enable and start wireguard
+  systemd:
+    name: wg-quick@wg0.service
+    state: started
+    enabled: yes
+
+
+# Firewall configuration
+
+- include: firewall.yml

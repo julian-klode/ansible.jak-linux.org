@@ -1,0 +1,52 @@
+---
+
+- name: ufw allow wireguard
+  ufw:
+    port: "{{wireguard.listen_port}}"
+    proto: udp
+    comment: WireGuard
+    rule: allow
+
+
+- name: sysctl forwarding
+  copy:
+    dest: /etc/sysctl.d/60-wireguard.conf
+    content: |
+      # Managed by Ansible
+      net.ipv4.ip_forward=1
+      net.ipv6.conf.all.forwarding=1
+  notify: restart procps
+
+
+- name: ufw before rule
+  blockinfile:
+    path: /etc/ufw/before.rules
+    block: |
+      # NAT table rules
+      *nat
+      :POSTROUTING ACCEPT [0:0]
+      -A POSTROUTING -s 10.8.0.0/8 -o eth0 -j MASQUERADE
+      COMMIT
+    marker: "# {mark} ANSIBLE MANAGED VPN BLOCK"
+    insertbefore: Don't delete these required lines, otherwise there will be errors
+  notify: ufw reload
+
+
+# The following 3 rules have to be added via ufw commands until
+#   https://github.com/ansible/ansible/commit/a0b8b85fa5ab512f0ece4c660aba754fc85edc9e
+# is part of a stable ansible release used for deployment
+
+- name: Allow wg0 -> wg0
+  command: ufw route allow in on wg0 out on wg0 comment WireGuard
+  register: route_wg0_wg0
+  changed_when: '"Skipping adding existing rule" not in route_wg0_wg0.stdout'
+
+- name: Allow wg0 -> eth0
+  command: ufw route allow in on wg0 out on eth0 comment WireGuard
+  register: route_wg0_eth0
+  changed_when: '"Skipping adding existing rule" not in route_wg0_eth0.stdout'
+
+- name: Allow eth0 -> wg0
+  command: ufw route allow in on eth0 out on wg0 comment WireGuard
+  register: route_eth0_wg0
+  changed_when: '"Skipping adding existing rule" not in route_eth0_wg0.stdout'

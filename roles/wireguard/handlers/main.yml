@@ -1,0 +1,13 @@
+---
+- name: restart wg-quick@wg0
+  service:
+    name: wg-quick@wg0
+    state: restarted
+
+- name: restart procps
+  service:
+    name: procps
+    state: restarted
+
+- name: ufw reload
+  shell: ufw reload

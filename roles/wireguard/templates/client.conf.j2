@@ -1,0 +1,10 @@
+[Interface]
+Address = {{ ", ".join(item.address) }}
+PrivateKey = {{ item.private_key }}
+DNS = {{ ", ".join(wireguard.client_dns) }}
+
+[Peer]
+PublicKey = {{ wireguard.public_key }}
+PresharedKey = {{ item.preshared_key }}
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = {{ domains[0].cname }}:{{wireguard.listen_port}}

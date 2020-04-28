@@ -1,0 +1,12 @@
+#!/bin/sh
+
+file=$(mktemp)
+trap "rm $file" EXIT
+wg genkey > $file
+
+printf "    - name:          %s\n" "$1"
+printf "      address:\n"
+printf "        - 10.0.0.X/32\n"
+printf "      public_key:    %s\n" "$(wg pubkey < $file)"
+printf "      private_key:   %s\n" "$(cat $file | ansible-vault encrypt_string --vault-id ~/Documents/ansible.key)"
+printf "      preshared_key: %s\n" "$(wg genpsk | ansible-vault encrypt_string --vault-id ~/Documents/ansible.key)"
