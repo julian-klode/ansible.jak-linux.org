@@ -58,9 +58,6 @@ domains:
     nginx_add_locations: |
       return 301 https://dep-team.pages.debian.net$request_uri;
 
-  - cname: mirror.fail
-    alias: [www.mirror.fail]
-
   - cname: jak-software.de
     alias: [www.jak-software.de]
     nginx_add_locations: |
@@ -71,6 +68,11 @@ domains:
 
   - cname: www.simon-klode.de
     alias: [simon-klode.de]
+
+
+old_domains:
+  - cname: mirror.fail
+    alias: [www.mirror.fail]
 
 
 forwards:
