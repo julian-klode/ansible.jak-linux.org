@@ -65,6 +65,18 @@
   file: name=/var/www/{{item.cname}} state=directory
   loop: "{{ domains | default([{'cname': inventory_hostname, 'alias': []}]) }}"
 
+# Disable removed sites
+
+- name: make old sites unavailable
+  file: dest=/etc/nginx/sites-available/{{item.cname}} state=absent
+  loop: "{{ old_domains | default([]) }}"
+  notify: systemctl reload nginx
+
+- name: disable old sites
+  file: dest=/etc/nginx/sites-enabled/{{item.cname}} state=absent
+  loop: "{{ old_domains | default([]) }}"
+  notify: systemctl reload nginx
+
 # Enable custom configuration rules
 - name: Make registered sites available
   copy:
