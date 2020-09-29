@@ -42,7 +42,7 @@ server {
     root /var/www/{{ domain }};
 
     location / {
-        try_files $uri $uri/ =404;
+        {{ item.nginx_root_location | default("try_files $uri $uri/ =404;") }}
     }
 
     location ~* \.(jpg|jpeg|png|gif|ico|css|js|woff2|otf)$ {
