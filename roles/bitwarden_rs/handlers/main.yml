@@ -1,0 +1,15 @@
+---
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: systemctl restart bitwarden_rs.service
+  service:
+     name: bitwarden_rs.service
+     state: restarted
+
+- name: aa-enforce usr.local.bin.bitwarden_rs
+  command: aa-enforce usr.local.bin.bitwarden_rs
+  when: ansible_apparmor["status"] == "enabled"
+  notify:
+    - systemctl restart bitwarden_rs.service

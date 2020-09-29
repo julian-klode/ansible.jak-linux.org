@@ -1,0 +1,14 @@
+- name: download webvault
+  get_url:
+    url: https://github.com/dani-garcia/bw_web_builds/releases/download/v2.15.1/bw_web_v2.15.1.tar.gz
+    checksum: sha256:a8fb26424970fdc20fb3df723d49812a30296bd831b80c3bfcebaec6957877f3
+    dest: /tmp/webvault.tgz
+  register: webvault_download
+
+- name: Extract webvault
+  unarchive:
+    src: /tmp/webvault.tgz
+    dest: /var/www/vault.jak-linux.org
+    remote_src: true
+    extra_opts: --strip-components=1
+  when: webvault_download.changed

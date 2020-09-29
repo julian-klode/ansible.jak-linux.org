@@ -1,0 +1,18 @@
+# Managed by ansible
+# Last Modified: Mon Sep 28 23:58:06 2020
+#include <tunables/global>
+
+/usr/local/bin/bitwarden_rs {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/openssl>
+  #include <abstractions/ssl_certs>
+
+  # We need to launch OpenSSL to generate keys
+  /usr/bin/openssl mrix,
+
+  /usr/local/bin/bitwarden_rs mr,
+
+  # Data
+  owner /var/lib/private/bitwarden_rs/** rwk,
+}

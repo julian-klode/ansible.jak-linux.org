@@ -1,0 +1,48 @@
+- name: create build_dir
+  file:
+    path: "builds/bitwarden_rs/{{bitwarden_rs_version}}"
+    state: directory
+  delegate_to: localhost
+
+- name: build bitwarden_rs
+  command: "podman build -v {{playbook_dir}}/builds/bitwarden_rs/{{bitwarden_rs_version}}:/output --build-arg=RELEASE={{bitwarden_rs_version}} -f roles/bitwarden_rs/helpers/Dockerfile"
+  args:
+    creates: "builds/bitwarden_rs/{{bitwarden_rs_version}}/bitwarden_rs"
+  delegate_to: localhost
+
+- name: Install bitwarden_rs binary
+  copy:
+    src: "builds/bitwarden_rs/{{bitwarden_rs_version}}/bitwarden_rs"
+    dest: /usr/local/bin/bitwarden_rs
+    mode: 0755
+  notify:
+    - systemctl restart bitwarden_rs.service
+
+- name: install bitwarden_rs apparmor
+  copy:
+    src: usr.local.bin.bitwarden_rs
+    dest: /etc/apparmor.d/usr.local.bin.bitwarden_rs
+  notify:
+    - aa-enforce usr.local.bin.bitwarden_rs
+    - systemctl restart bitwarden_rs.service
+
+- name: install bitwarden_rs config
+  copy:
+    src: bitwarden_rs
+    dest: /etc/default/bitwarden_rs
+  notify:
+    - systemctl restart bitwarden_rs.service
+
+- name: install bitwarden_rs systemd unit
+  copy:
+    src: bitwarden_rs.service
+    dest: /etc/systemd/system/bitwarden_rs.service
+  notify:
+    - systemctl daemon-reload
+
+- name: enable and start bitwarden_rs
+  service:
+     name: bitwarden_rs.service
+     enabled: true
+     state: started
+
