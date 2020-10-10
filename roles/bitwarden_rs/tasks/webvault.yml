@@ -1,7 +1,7 @@
 - name: download webvault
   get_url:
-    url: https://github.com/dani-garcia/bw_web_builds/releases/download/v2.15.1/bw_web_v2.15.1.tar.gz
-    checksum: sha256:a8fb26424970fdc20fb3df723d49812a30296bd831b80c3bfcebaec6957877f3
+    url: https://github.com/dani-garcia/bw_web_builds/releases/download/v2.16.1/bw_web_v2.16.1.tar.gz
+    checksum: sha256:9c0420f179fb8bb5e7489344414da1e527a66bc903a4cdcd30a6bd2f91638eb0
     dest: /tmp/webvault.tgz
   register: webvault_download
 
