@@ -21,7 +21,7 @@ domains:
           limit_req zone=weechat burst=1 nodelay;   # Brute force prevention
       }
 
-      location ^~ /rspamd {
+      location ^~ /rspamd/ {
         proxy_pass       http://localhost:11334/;
 
         proxy_set_header Host      $host;
