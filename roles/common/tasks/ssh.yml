@@ -5,8 +5,11 @@
 - name: ensure openssh-server is running
   service: name=ssh state=started enabled=true
 
-- name: ufw limit openssh
-  ufw: rule=limit name=OpenSSH
+- name: delete ufw limit openssh on IPv4
+  ufw: rule=limit name=OpenSSH to=0.0.0.0/0 delete=true
+
+- name: ufw limit openssh (IPv6)
+  ufw: rule=limit name=OpenSSH to=::/0
 
 - name: Disable password login
   lineinfile: dest=/etc/ssh/sshd_config regexp="^(#\s*)?PasswordAuthentication " line="PasswordAuthentication no"
