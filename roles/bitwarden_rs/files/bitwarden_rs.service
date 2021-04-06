@@ -25,6 +25,7 @@ PrivateUsers=true
 SystemCallFilter=@system-service
 SystemCallFilter=~@privileged
 SystemCallFilter=~@resources
+SystemCallArchitectures=native
 
 [Install]
 WantedBy=default.target

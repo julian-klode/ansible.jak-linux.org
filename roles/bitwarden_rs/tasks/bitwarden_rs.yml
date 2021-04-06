@@ -39,6 +39,8 @@
     dest: /etc/systemd/system/bitwarden_rs.service
   notify:
     - systemctl daemon-reload
+    - systemctl restart bitwarden_rs.service
+
 
 - name: enable and start bitwarden_rs
   service:
