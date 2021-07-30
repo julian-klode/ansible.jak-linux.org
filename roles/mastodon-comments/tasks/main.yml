@@ -1,7 +1,7 @@
 ---
 
 - name: build mastodon-comments
-  command: go get -v github.com/julian-klode/mastodon-comments
+  command: env -C /home/jak/Projects/Stable/mastodon-comments go install
   args:
     creates: "{{ lookup('env', 'GOPATH') | default('~/go', true) }}/bin/mastodon-comments"
   delegate_to: localhost
