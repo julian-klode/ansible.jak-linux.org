@@ -1,4 +1,4 @@
-ARG IMAGE=ubuntu:focal
+ARG IMAGE=ubuntu:jammy
 FROM $IMAGE
 ARG RELEASE
 ENV DEBIAN_FRONTEND=noninteractive
