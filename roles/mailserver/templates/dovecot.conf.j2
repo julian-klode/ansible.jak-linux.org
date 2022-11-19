@@ -8,6 +8,17 @@ mail_location = maildir:~/Maildir:LAYOUT=fs
 
 mail_privileged_group = mail
 
+mail_attribute_dict = file:%h/Maildir/dovecot-attributes
+mail_plugins = $mail_plugins mail_crypt
+mail_debug= yes
+
+plugin {
+  mail_crypt_curve = secp521r1
+  mail_crypt_save_version = 2
+  mail_crypt_require_encrypted_user_key = yes
+}
+
+
 # Configuration of directories
 namespace inbox {
   inbox = yes
@@ -21,9 +32,6 @@ namespace inbox {
   mailbox Sent {
     special_use = \Sent
   }
-  mailbox "Sent Messages" {
-    special_use = \Sent
-  }
   mailbox Trash {
     special_use = \Trash
   }
@@ -33,6 +41,7 @@ namespace inbox {
 # Use PAM for authentication
 passdb {
   driver = pam
+  override_fields = userdb_mail_crypt_private_password=%w userdb_mail_crypt_save_version=2
 }
 
 userdb {
