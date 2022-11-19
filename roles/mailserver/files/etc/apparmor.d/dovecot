@@ -1,0 +1,39 @@
+# Last Modified: Sat Nov 19 20:58:01 2022
+include <tunables/global>
+
+profile dovecot /usr/{sbin/dovecot,lib/dovecot/*} flags=(attach_disconnected) {
+  include <abstractions/authentication>
+  include <abstractions/base>
+  include <abstractions/nameservice>
+  include <abstractions/ssl_certs>
+  include <abstractions/ssl_keys>
+
+  capability audit_write,
+  capability chown,
+  capability dac_override,
+  capability dac_read_search,
+  capability kill,
+  capability setgid,
+  capability setuid,
+  capability sys_chroot,
+
+  network unix stream,
+
+  signal peer=@{profile_name},
+
+  /etc/dovecot/ r,
+  /etc/dovecot/** r,
+  /etc/mailname r,
+  /run/dovecot/** rwk,
+  /usr/lib/dovecot/** mrix,
+  /var/spool/postfix/private/auth rw,
+  /var/spool/postfix/private/dovecot-lmtp rw,
+  /var/{lib,spool}/dovecot/ rw,
+  /{usr/,}{s,}bin/* mrix,
+  owner /lib/x86_64-linux-gnu/ld-*.so mr,
+  owner /run/systemd/notify w,
+  owner /var/{lib,spool}/dovecot/** mrwlk,
+  owner @{HOME}/Maildir/ mrwlk,
+  owner @{HOME}/Maildir/** mrwlk,
+
+}
