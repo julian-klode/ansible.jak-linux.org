@@ -10,7 +10,6 @@ mail_privileged_group = mail
 
 mail_attribute_dict = file:%h/Maildir/dovecot-attributes
 mail_plugins = $mail_plugins mail_crypt
-mail_debug= yes
 
 plugin {
   mail_crypt_curve = secp521r1
@@ -86,4 +85,4 @@ protocol lmtp {
 ssl_cert = </etc/letsencrypt/live/{{ domains[0].cname }}/fullchain.pem
 ssl_client_ca_dir = /etc/ssl/certs
 ssl_key = </etc/letsencrypt/live/{{ domains[0].cname }}/privkey.pem
-ssl_protocols = !SSLv3 !TLSv1.1
+ssl_min_protocol = TLSv1.2

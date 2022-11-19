@@ -10,6 +10,14 @@
     - dovecot-lmtpd
     state: present
 
+- name: install dovecot apparmor profile
+  copy: src=etc/apparmor.d/dovecot dest=/etc/apparmor.d/dovecot
+  register: dovecot_apparmor
+
+- name: enforce dovecot
+  command: aa-enforce /etc/apparmor.d/dovecot
+  when: dovecot_apparmor.changed and ansible_apparmor["status"] == "enabled"
+
 - name: esure dovecot is running
   service:
     name: dovecot
