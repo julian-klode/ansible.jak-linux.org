@@ -139,6 +139,18 @@ aliases: |
   root: jak
   julian: jak
 
+envelope_senders:
+    jak:
+        - jak@debian.org
+        - jak@jak-linux.org
+        - postmaster@jak-linux.org
+        - julian@julian-klode.de
+        - jak@jak-software.de
+    test:
+        - test@jak-linux.org
+    simon:
+        - simon@simon-klode.de
+
 rspamd_greylist_whitelist_domains:
   - debian.org
   - canonical.com

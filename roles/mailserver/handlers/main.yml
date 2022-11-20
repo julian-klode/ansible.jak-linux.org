@@ -1,6 +1,10 @@
 - name: newaliases
   command: newaliases
 
+- name: postmap /etc/postfix/envelope_senders
+  command: postmap /etc/postfix/envelope_senders
+  notify: reload postfix
+
 - name: aa-enforce usr.local.bin.postforward
   command: aa-enforce usr.local.bin.postforward
   when: ansible_apparmor["status"] == "enabled"
@@ -8,6 +12,11 @@
 - name: aa-enforce rspamd
   command: aa-enforce usr.bin.rspamd
   when: ansible_apparmor["status"] == "enabled"
+
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded
 
 - name: restart rspamd
   service:
