@@ -45,3 +45,11 @@
     timeout: 1
   delegate_to: localhost
   tags: assert
+
+- name: install certbot deploy hook
+  copy:
+    content: |
+      #!/bin/sh
+      systemctl reload dovecot
+    dest: /etc/letsencrypt/renewal-hooks/deploy/dovecot
+    mode: 0755
