@@ -22,25 +22,38 @@ plugin {
 namespace inbox {
   inbox = yes
   location = 
+  prefix = 
+
   mailbox Drafts {
     special_use = \Drafts
+    auto = subscribe
   }
+
   mailbox Junk {
     special_use = \Junk
+    auto = subscribe
   }
-  mailbox Sent {
-    special_use = \Sent
-  }
+
   mailbox Trash {
     special_use = \Trash
+    auto = subscribe
   }
-  prefix = 
+
+  mailbox Sent {
+    special_use = \Sent
+    auto = subscribe
+  }
+
+  mailbox Archives {
+    special_use = \Archive
+    auto = subscribe
+  }
 }
 
 # Use PAM for authentication
 passdb {
   driver = pam
-  override_fields = userdb_mail_crypt_private_password=%w userdb_mail_crypt_save_version=2
+  override_fields = userdb_mail_crypt_private_password=%{sha256:password} userdb_mail_crypt_save_version=2
 }
 
 userdb {
