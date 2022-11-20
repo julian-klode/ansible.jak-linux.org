@@ -1,0 +1,6 @@
+{% for user, emails  in envelope_senders|dictsort %}
+{% for email in emails %}
+{{email}} {{user}}
+{% endfor %}
+{% endfor %}
+

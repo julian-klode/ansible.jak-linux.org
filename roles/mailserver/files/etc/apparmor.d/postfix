@@ -15,6 +15,7 @@ profile postfix /usr/lib/postfix/sbin/* flags=(attach_disconnected) {
   /etc/aliases.db rk,
   /etc/mailname r,
   /etc/postfix/** r,
+  /etc/postfix/envelope_senders.db rk,
   /etc/postfix/ r,
   /var/{lib,spool}/postfix/ rw,
 

@@ -49,6 +49,10 @@
   template: src=aliases.j2 dest=/etc/aliases
   notify: newaliases
 
+- name: install senders
+  template: src=envelope_senders.j2 dest=/etc/postfix/envelope_senders
+  notify: postmap /etc/postfix/envelope_senders
+
 - name: reload postfix on config change
   service:
     name: postfix
