@@ -144,6 +144,7 @@ envelope_senders:
         - jak@debian.org
         - jak@jak-linux.org
         - postmaster@jak-linux.org
+        - root@jak-linux.org
         - julian@julian-klode.de
         - jak@jak-software.de
     test:
