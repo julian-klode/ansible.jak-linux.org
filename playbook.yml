@@ -8,19 +8,4 @@
      - production
      - staging
   roles:
-     - letsencrypt
-
-- hosts:
-     - all
-  roles:
-     - common
-     - dns
      - mailserver
-     - mastodon-comments
-     - shadowsocks
-     - weechatserver
-     - webalizer
-     - webserver
-     - borgbackup
-     - wireguard
-     - bitwarden_rs
