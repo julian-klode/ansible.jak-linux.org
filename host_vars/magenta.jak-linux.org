@@ -162,9 +162,9 @@ smtp_bind_address:
 
 backups:
   - name: root
-    server_user: 16495
-    server: ch-s010.rsync.net
-    repository: /data1/home/16495/magenta
+    server_user: zh2627
+    server: zh2627.rsync.net
+    repository: /data1/home/zh2627/magenta
     prefix: magenta
     prune_policy: -d 7 -w 4 -m 12 -y 10
     create_policy: -C lz4
