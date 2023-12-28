@@ -97,7 +97,7 @@ domains:
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Connection "upgrade";
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' wss://home.simon-klode.de/; font-src 'self' data:; img-src 'self' data: https://basemaps.cartocdn.com/ https://brands.home-assistant.io/; script-src-elem 'self' 'unsafe-inline';" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; connect-src 'self' https://basemaps.cartocdn.com/ https://brands.home-assistant.io/ wss://home.simon-klode.de/; font-src 'self' data:; img-src 'self' data: https://basemaps.cartocdn.com/ https://brands.home-assistant.io/; script-src-elem 'self' 'unsafe-inline';" always;
       }
 
   - cname: www.simon-klode.de
