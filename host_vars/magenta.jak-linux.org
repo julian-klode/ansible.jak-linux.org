@@ -97,7 +97,7 @@ domains:
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Connection "upgrade";
-        add_header Content-Security-Policy "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'";
+        add_header Content-Security-Policy "default-src https: data: 'unsafe-inline' 'unsafe-eval'";
       }
 
   - cname: www.simon-klode.de
