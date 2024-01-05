@@ -16,5 +16,6 @@ borg prune  {{item.prune_policy}} \
            --prefix \
            {{item.prefix}} {{item.server_user}}@{{item.server}}:{{item.repository}}
 
+borg compact {{item.server_user}}@{{item.server}}:{{item.repository}}
 
 {{item.post|default("")}}
