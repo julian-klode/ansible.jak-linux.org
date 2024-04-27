@@ -1,4 +1,4 @@
-ARG IMAGE=ubuntu:jammy
+ARG IMAGE=ubuntu:noble
 FROM $IMAGE
 ARG RELEASE
 ENV DEBIAN_FRONTEND=noninteractive
