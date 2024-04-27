@@ -1,3 +1,3 @@
-- include: webvault.yml
+- import_tasks: webvault.yml
 
-- include: bitwarden_rs.yml
+- import_tasks: bitwarden_rs.yml
