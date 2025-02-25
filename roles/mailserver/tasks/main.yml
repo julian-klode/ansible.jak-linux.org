@@ -1,6 +1,6 @@
 - name: configure mailname
   copy: content="{{ domains[0].cname }}" dest=/etc/mailname
 
-- include: rspamd.yml
-- include: dovecot.yml
-- include: postfix.yml
+- import_tasks: rspamd.yml
+- import_tasks: dovecot.yml
+- import_tasks: postfix.yml

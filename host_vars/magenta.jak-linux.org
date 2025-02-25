@@ -132,7 +132,7 @@ old_domains:
 
 
 forwards:
-  jak: !vault |
+  julian: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           33613932653061663961616138343162376130663563373030353833626532343461633834326634
           6639313135646462393662346437366463383766613839650a656463316139653831396538323662
@@ -149,7 +149,6 @@ forwards:
 
 aliases: |
   root: jak
-  julian: jak
 
 envelope_senders:
     jak:

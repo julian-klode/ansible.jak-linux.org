@@ -1,17 +1,71 @@
 ---
 
-- name: Add rspamd apt key
-  apt_key:
-    url: https://rspamd.com/apt-stable/gpg.key
-    keyring: /etc/apt/trusted.gpg.d/rspamd.gpg
-    id: 3FA347D5E599BE4595CA2576FFA232EDBF21E25E
-
 - name: Add rspamd repository
-  apt_repository:
-    repo: deb [arch=amd64] http://rspamd.com/apt-stable/ {{ ansible_lsb.codename | default(ansible_distribution_release) }} main
-    state: present
-    filename: rspamd
+  register: rspamd_sources
+  copy:
+    dest: /etc/apt/sources.list.d/rspamd.sources
+    content: |
+      Types: deb
+      URIs: http://rspamd.com/apt-stable/
+      Suites: noble
+      Components: main
+      Signed-By:
+       -----BEGIN PGP PUBLIC KEY BLOCK-----
+       .
+       mQINBFW3VB8BEADAV1lBy8DPcSEBSLYVKgwsBx/dRmgenKeliMpiZyNYJJmF6tSV
+       s3v5DtDIUESgI2mBKNeptdneri3CDJScI/LgPLKqemrLBkAMfe+f57JgppY5ti4H
+       xo+VZdbF9bhCAwYwJnqnyuLjYSUu6nCuW4uPDoqBHXynwsIWr1O3fREpY+vgIgaT
+       Oqm3ncssqxSicymd6k0yuo55xuUvrc4Yu4IEnhFVRU53e0E3zmHg/7ONI99YtBan
+       7G/w2IfA1bfRDYZ2Avau+JqGcEl8vy+eLmYayKirdsMPN8Tx6RFOstDf1CnjW/bj
+       IX7SDOklIGJjJwcWW/iY+1P9SfNNqSDgXavJj2wmLMlUhgjyJFTXfdDRjmN0PFxo
+       f6OQu5xok1WHfKFJL+hLGknjHdXLmGd5MSuFlutdVHJQrieknjBea9xCiEsrfe8V
+       zyNqGhzgIYjOi/bO7jGpY/WiFHvM9XtBVp862tqM1S1WbAWW5u+es6NK4q9Cv0DR
+       tIalss+5gFhdsIFGFYQWfY7CrjOIC+C0+c5IGaBkHte35hCCvDpOO909xxVqUZYe
+       9Pl8zYgPDe1H4arMO+p6rSvVntvIWOqLqkuWYSiOY4TGADJTkeZRbopZhvqs/9mc
+       847fVMbOwKfkbeuGiHhUK0QFewXSu+cXJyGtyu3RgokBWr2yyzJFXIvJbQARAQAB
+       sAwAAGdwZwEAAAAAAAC0RlJzcGFtZCBOaWdodGx5IEJ1aWxkcyAoUnNwYW1kIE5p
+       Z2h0bHkgQnVpbGRzKSA8dnNldm9sb2RAaGlnaHNlY3VyZS5ydT6wDAAAZ3BnAgAA
+       AAAAAIkCOAQTAQIAIgUCVbdUHwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AA
+       CgkQ/6Iy7b8h4l7nDQ/+I2tLfuETIg9HNM98Q1adGLKu5Gb85bXlK8PfH9QTGG5k
+       kyfuNyVWVeuxifH1dnff2rSJci3HvBp/YWJhewuZz6QgjpTXo5MJHPTIWYKDNM+7
+       EzWcCi2eH0p8Rw9dGfdtxviEUGHl7MDO4RP0+fDYADTlgRbPQcSBCE+iH0TRxdt0
+       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
+       -----END PGP PUBLIC KEY BLOCK-----
+
+- name: apt update
+  apt:
     update_cache: true
+  when: rspamd_sources.changed
 
 - name: install rspamd apparmor profile
   copy:

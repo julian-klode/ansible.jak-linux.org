@@ -16,6 +16,7 @@
   #  kernel stuff
   /dev/shm/rhm.* rw,
   /proc/sys/kernel/random/uuid r,
+  /sys/kernel/mm/transparent_hugepage/enabled r,
 
   # something execution
   /lib/*/ld-*.so mr,
