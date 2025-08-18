@@ -62,6 +62,11 @@ domains:
     nginx_add_locations: |
       return 301 https://dep-team.pages.debian.net$request_uri;
 
+  - cname: reformfc.co.uk
+    alias: [www.reformfc.co.uk]
+    nginx_add_locations: |
+      return 301 https://actearly.uk/;
+
   - cname: jak-software.de
     alias: [www.jak-software.de]
     nginx_add_locations: |
