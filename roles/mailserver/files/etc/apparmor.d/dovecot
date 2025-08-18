@@ -25,6 +25,7 @@ profile dovecot /usr/{sbin/dovecot,lib/dovecot/*} flags=(attach_disconnected) {
   /etc/dovecot/** r,
   /etc/mailname r,
   owner /run/dovecot/ rwk,
+  owner /tmp/dovecot.imap.* rwk,
   /run/dovecot/** rwk,
   /usr/lib/dovecot/** mrix,
   /var/spool/postfix/private/auth rw,
