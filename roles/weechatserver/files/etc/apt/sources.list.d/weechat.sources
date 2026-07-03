@@ -1,6 +1,6 @@
 Types: deb
 URIs: https://weechat.org/ubuntu
-Suites: noble
+Suites: resolute
 Components: main
 Signed-By: -----BEGIN PGP PUBLIC KEY BLOCK-----
  .
