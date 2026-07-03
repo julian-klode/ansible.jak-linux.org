@@ -1,9 +1,3 @@
-- name: install weechat gpg key
-  apt_key:
-    id: 11E9DE8848F2B65222AA75B8D1820DB22A11534E
-    keyserver: keyserver.ubuntu.com
-    keyring: /etc/apt/trusted.gpg.d/weechat.gpg
-
 - name: add weechat preferences
   copy:
     content: |
@@ -19,12 +13,12 @@
       Pin: release *
       Pin-Priority: -1
     dest: /etc/apt/preferences.d/weechat.pref
-- name: add weechat repository
-  apt_repository:
-    repo: deb https://weechat.org/{{ansible_distribution| lower}} {{ ansible_lsb.codename | default(ansible_distribution_release) }} main
-    state: present
-    filename: weechat
-    update_cache: true
+
+- name: Add weechat repository
+  register: weechat_sources
+  copy:
+    src: etc/apt/sources.list.d/weechat.sources
+    dest: /etc/apt/sources.list.d/weechat.sources
 
 - name: install weechat, tmux, mosh
   apt:
@@ -102,7 +96,7 @@
     content: |
       set -g status off
       set-option -g set-titles on
-      set-option -g set-titles-string "#W"
+      set-option -g set-titles-string "#{pane_title}"
       set -g focus-events on
     dest: /home/weechat/.tmux.conf
     owner: weechat

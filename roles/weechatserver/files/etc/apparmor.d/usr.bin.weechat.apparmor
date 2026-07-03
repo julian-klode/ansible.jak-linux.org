@@ -13,6 +13,9 @@
   # Program itself
   /usr/bin/weechat rm,
 
+  # ncurses
+  /usr/share/terminfo/**           r,
+
   # State and log files
   # Plugins and scripts
   /usr/lib/weechat/plugins/** rm,
