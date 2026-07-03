@@ -61,7 +61,7 @@ passdb pam {
   driver = pam
 
   fields {
-    userdb_mail_crypt_private_password = %{sha256:password}
+    userdb_crypt_user_key_password = %{password | sha256}
     userdb_mail_crypt_save_version = 2
   }
 }

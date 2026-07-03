@@ -30,6 +30,8 @@ profile postfix /usr/lib/postfix/sbin/* flags=(attach_disconnected) {
   /etc/ssl/openssl.cnf r,
   /etc/letsencrypt/** r,
 
+  /etc/machine-id r,
+
   /proc/sys/kernel/random/boot_id r,
 
   signal peer=@{profile_name},

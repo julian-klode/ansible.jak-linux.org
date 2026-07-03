@@ -73,10 +73,10 @@ alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 
 # Handle SRS for forwarding
-recipient_canonical_maps = tcp:localhost:10002
+recipient_canonical_maps = socketmap:unix:srs:reverse
 recipient_canonical_classes= envelope_recipient,header_recipient
 
-sender_canonical_maps = tcp:localhost:10001
+sender_canonical_maps = socketmap:unix:srs:forward
 sender_canonical_classes = envelope_sender
 
 # Submission

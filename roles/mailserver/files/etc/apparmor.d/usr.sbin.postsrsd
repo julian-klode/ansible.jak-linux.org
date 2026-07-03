@@ -7,7 +7,12 @@
   capability setuid,
   capability setgid,
   capability sys_chroot,
+  /etc/machine-id r,
   /etc/postsrsd.secret r,
+  /etc/postsrsd.conf r,
   /usr/sbin/postsrsd mr,
+
+  /var/spool/postfix/srs rw,
+  /var/spool/postfix/srs.lock rwk,
 }
 
