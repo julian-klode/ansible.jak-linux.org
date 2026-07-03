@@ -32,4 +32,4 @@
 
 # Firewall configuration
 
-- include: firewall.yml
+- import_tasks: firewall.yml

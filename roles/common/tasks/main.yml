@@ -35,5 +35,5 @@
   apt:
     name: gpg
 
-- include: ufw.yml
-- include: ssh.yml
+- import_tasks: ufw.yml
+- import_tasks: ssh.yml
