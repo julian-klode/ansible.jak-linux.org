@@ -6,3 +6,4 @@
   tags: dovecot
 
 - import_tasks: postfix.yml
+  tags: postfix

@@ -88,9 +88,11 @@ smtpd_sender_login_maps = hash:/etc/postfix/envelope_senders
 
 # special senders
 transport_maps = hash:/etc/postfix/transport
+sender_dependent_relayhost_maps = hash:/etc/postfix/sender_relay
 smtp_sasl_auth_enable = yes
 smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 smtp_sasl_security_options = noanonymous
 smtp_tls_security_level = may
 smtp_address_preference = any
 
+cyrus_sasl_config_path = /etc/postfix/sasl
