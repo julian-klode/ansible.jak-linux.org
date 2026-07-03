@@ -18,12 +18,6 @@
   command: aa-enforce /etc/apparmor.d/dovecot
   when: dovecot_apparmor.changed and ansible_apparmor["status"] == "enabled"
 
-- name: esure dovecot is running
-  service:
-    name: dovecot
-    state: started
-    enabled: yes
-
 - name: install dovecot-sieve-filters directory
   file:
     dest: /usr/local/lib/dovecot-sieve-filters
@@ -38,6 +32,20 @@
     rule: limit
     name: Dovecot Secure IMAP
 
+- name: install certbot deploy hook
+  copy:
+    content: |
+      #!/bin/sh
+      systemctl reload dovecot
+    dest: /etc/letsencrypt/renewal-hooks/deploy/dovecot
+    mode: 0755
+
+- name: esure dovecot is running
+  service:
+    name: dovecot
+    state: started
+    enabled: yes
+
 - name: ensure smtp port is open
   wait_for:
     host: "{{ inventory_hostname }}"
@@ -46,10 +54,3 @@
   delegate_to: localhost
   tags: assert
 
-- name: install certbot deploy hook
-  copy:
-    content: |
-      #!/bin/sh
-      systemctl reload dovecot
-    dest: /etc/letsencrypt/renewal-hooks/deploy/dovecot
-    mode: 0755

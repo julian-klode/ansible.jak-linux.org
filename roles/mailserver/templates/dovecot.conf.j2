@@ -1,28 +1,34 @@
 # Managed by ansible
+dovecot_config_version = 2.4.2
+dovecot_storage_version = 2.4.2
 
 # Ensure local email can be delivered - map user@host to user
-auth_username_format = %Ln
+auth_username_format = %{user | username | lower}
 
 # Deliver to Maildir
-mail_location = maildir:~/Maildir:LAYOUT=fs
+mail_driver = maildir
+mail_path = ~/Maildir
+mailbox_list_layout = fs
 
 mail_privileged_group = mail
-
-mail_attribute_dict = file:%h/Maildir/dovecot-attributes
-mail_plugins = $mail_plugins mail_crypt
-
-plugin {
-  mail_crypt_curve = secp521r1
-  mail_crypt_save_version = 2
-  mail_crypt_require_encrypted_user_key = yes
+mail_attribute {
+  dict file {
+    path = %{home}/Maildir/dovecot-attributes
+  }
 }
+
+# Mail crypt
+mail_plugins {
+  mail_crypt = yes
+}
+
+crypt_user_key_curve = secp521r1
+crypt_user_key_require_encrypted = yes
 
 
 # Configuration of directories
 namespace inbox {
   inbox = yes
-  location = 
-  prefix = 
 
   mailbox Drafts {
     special_use = \Drafts
@@ -51,12 +57,16 @@ namespace inbox {
 }
 
 # Use PAM for authentication
-passdb {
+passdb pam {
   driver = pam
-  override_fields = userdb_mail_crypt_private_password=%{sha256:password} userdb_mail_crypt_save_version=2
+
+  fields {
+    userdb_mail_crypt_private_password = %{sha256:password}
+    userdb_mail_crypt_save_version = 2
+  }
 }
 
-userdb {
+userdb passwd {
   driver = passwd
 }
 
@@ -72,12 +82,19 @@ service auth {
 
 
 # Load plugins
-plugin {
-  sieve = file:~/sieve;active=~/.dovecot.sieve
-  sieve_plugins = sieve_extprograms
-  sieve_extensions = +vnd.dovecot.filter
-  sieve_filter_bin_dir = /usr/local/lib/dovecot-sieve-filters
+sieve_filter_bin_dir = /usr/local/lib/dovecot-sieve-filters
+sieve_plugins = sieve_extprograms
+
+sieve_script personal {
+  active_path = ~/.dovecot.sieve
+  driver = file
+  path = ~/sieve
 }
+
+sieve_extensions {
+  vnd.dovecot.filter = yes
+}
+
 
 # Setup protocols
 protocols = "imap lmtp"
@@ -91,11 +108,16 @@ service lmtp {
 }
 
 protocol lmtp {
-  mail_plugins = $mail_plugins sieve
+  mail_plugins {
+    sieve = yes
+  }
 }
 
 # Setup IMAP encryption
-ssl_cert = </etc/letsencrypt/live/{{ domains[0].cname }}/fullchain.pem
 ssl_client_ca_dir = /etc/ssl/certs
-ssl_key = </etc/letsencrypt/live/{{ domains[0].cname }}/privkey.pem
 ssl_min_protocol = TLSv1.2
+
+ssl_server {
+  cert_file = /etc/letsencrypt/live/{{ domains[0].cname }}/fullchain.pem
+  key_file = /etc/letsencrypt/live/{{ domains[0].cname }}/privkey.pem
+}

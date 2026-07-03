@@ -21,6 +21,7 @@ profile dovecot /usr/{sbin/dovecot,lib/dovecot/*} flags=(attach_disconnected) {
 
   signal peer=@{profile_name},
 
+  /tmp/doveconf* rw,
   /etc/dovecot/ r,
   /etc/dovecot/** r,
   /etc/mailname r,

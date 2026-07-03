@@ -3,4 +3,6 @@
 
 - import_tasks: rspamd.yml
 - import_tasks: dovecot.yml
+  tags: dovecot
+
 - import_tasks: postfix.yml
