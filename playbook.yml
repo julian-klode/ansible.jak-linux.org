@@ -22,5 +22,12 @@
      - webalizer
      - webserver
      - borgbackup
-     - wireguard
+     - role: wireguard
+       tags: wireguard
+
+
+- hosts:
+     - all
+  roles:
      - bitwarden_rs
+  tags: bitwarden_rs
