@@ -1,4 +1,4 @@
-ARG IMAGE=ubuntu:noble
+ARG IMAGE=ubuntu:resolute
 FROM $IMAGE
 ARG RELEASE
 ENV DEBIAN_FRONTEND=noninteractive
@@ -7,5 +7,5 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh /dev/stdin --
 RUN mkdir /build && git clone https://github.com/dani-garcia/vaultwarden /build/vaultwarden
 WORKDIR /build/vaultwarden
 RUN git checkout $RELEASE
-RUN . $HOME/.cargo/env && cargo build --features sqlite --release
-RUN cp target/release/vaultwarden /output/bitwarden_rs
+RUN . $HOME/.cargo/env && cargo build --features sqlite_system --profile release-low
+RUN cp target/release-low/vaultwarden /output/bitwarden_rs
